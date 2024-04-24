@@ -19,7 +19,7 @@ export const LoginBlock = () => {
         <Box sx={{ width: '100%', height: '100%', padding: '5px 7% 15px' }}>
             <Box sx={{ width: '100%', height: '12%', display: 'flex', justifyContent: 'center' }}>
                 <Box sx={{
-                    width: '70%', height: '100%', display: 'flex', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', backgroundColor: '#D9D9D9', padding: '0px 10px',
+                    width: '70%', height: '100%', display: 'flex', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', backgroundColor: '#E6E6E6', padding: '0px 10px',
                     justifyContent: 'center', alignItems: 'center', gap: '25px'
                 }}>
                     <IconBlock imgPath={"/assets/images/google_icon.png"} />
@@ -59,16 +59,20 @@ export const LoginBlock = () => {
                                 width: '100%',
                                 paddingBottom: '15px',
                                 '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': {
-                                    padding: '10.5px 16px'
-                                }
+                                    padding: '10.5px 16px',
+                                    backgroundColor: '#F9F9F9'
+                                },
+                                "& fieldset": { border: 'none' }
                             }} variant="outlined" size="medium" />
 
 
                             <FormControl sx={{
                                 m: 1, width: '100%', margin: '0px',
+                                backgroundColor: '#F9F9F9',
                                 '& .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input': {
                                     padding: '10.5px 16px'
-                                }
+                                },
+                                "& fieldset": { border: 'none' }
                             }} variant="outlined" size="medium">
                                 <InputLabel htmlFor="outlined-adornment-password" sx={{
                                     marginTop: '-5px',
@@ -109,7 +113,12 @@ export const LoginBlock = () => {
                             </Typography>
                         </Box>
                         <Box sx={{ padding: '2% 10%' }}>
-                            <Button variant="outlined" sx={{width: '70%', height: '25px', borderRadius: '30px', color: '#B1B1B1', borderColor: '#B1B1B1'}}>
+                            <Button variant="contained" disableElevation sx={{
+                                width: '80%', height: '28px', borderRadius: '30px', color: '#B1B1B1', backgroundColor: '#F9F9F9', textTransform: 'none',
+                                '&:hover': {
+                                    backgroundColor: '#FBFBFB'
+                                }
+                            }}>
                                 Login
                             </Button>
                         </Box>

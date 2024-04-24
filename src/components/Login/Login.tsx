@@ -9,7 +9,7 @@ export const Login = () => {
                 <ParticleComponent />
             </Box>
             <Box sx={{ width: '40%', backgroundColor: '#D9D9D9', display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: '150px' }}>
-                <Box sx={{ width: '70%', height: '45%', backgroundColor: '#FFFFFF', borderRadius: '32px' }}>
+                <Box sx={{ width: '70%', height: '43%', backgroundColor: '#FFFFFF', borderRadius: '32px' }}>
                     <LoginBlock />
                 </Box>
             </Box>
