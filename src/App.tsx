@@ -2,14 +2,19 @@ import './App.css';
 import Box from '@mui/material/Box';
 import ToDoLists from './components/To-do-Lists/TodoBlock';
 import { Login } from './components/Login/Login';
+import { BrowserRouter as Router , Route, Routes } from "react-router-dom";
 
 function App() {
 
   return (
-    <Box className="App">
-      {/* <ToDoLists /> */}
-      <Login />
-    </Box>
+    <Router>
+      <Box className="App">
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/ToDoLists" element={<ToDoLists />} />
+        </Routes>
+      </Box>
+    </Router>
   );
 }
 
