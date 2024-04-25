@@ -1,9 +1,10 @@
 import Box from "@mui/material/Box"
 import { IconBlock } from "../IconsBlocks/IconBlock"
-import { FormControl, TextField, Typography, InputLabel, OutlinedInput, InputAdornment, IconButton, Checkbox, Button } from "@mui/material"
+import { FormControl, Typography, InputLabel, OutlinedInput, InputAdornment, IconButton, Checkbox, Button } from "@mui/material"
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useState } from "react";
+import { CustomTextField } from "../../../common/InputFields/CustomTextField";
 
 export const LoginBlock = () => {
 
@@ -51,19 +52,14 @@ export const LoginBlock = () => {
                 <Box>
                     <Box sx={{ padding: '3% 7%' }}>
                         <Box>
-                            <TextField id="outlined-basic" label="Name" InputLabelProps={{
-                                sx: {
-                                    marginTop: '-5px',
-                                },
-                            }} sx={{
-                                width: '100%',
-                                paddingBottom: '15px',
-                                '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': {
-                                    padding: '10.5px 16px',
-                                    backgroundColor: '#F9F9F9'
-                                },
-                                "& fieldset": { border: 'none' }
-                            }} variant="outlined" size="medium" />
+                            <CustomTextField
+                                backgroundColor='#F9F9F9'
+                                noBorder={true}
+                                value=''
+                                label='Name'
+                                variant='outlined'
+                                size='medium'
+                            />
 
 
                             <FormControl sx={{
@@ -112,7 +108,7 @@ export const LoginBlock = () => {
                                 Forgot Password?
                             </Typography>
                         </Box>
-                        <Box sx={{ padding: '2% 10%' }}>
+                        <Box sx={{ padding: '3% 10%' }}>
                             <Button variant="contained" disableElevation sx={{
                                 width: '80%', height: '28px', borderRadius: '30px', color: '#B1B1B1', backgroundColor: '#F9F9F9', textTransform: 'none',
                                 '&:hover': {
