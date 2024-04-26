@@ -4,6 +4,7 @@ import { Typography, Button } from "@mui/material"
 import { LoginBlock } from "../LoginBlock/LoginBlock";
 import { SignUpBlock } from "../SignUpBlock/SignUpBlock";
 import { AuthType } from "../../../Models/Enums/AuthEnum";
+import { Link } from "react-router-dom"
 
 interface AuthFormBlockProps {
     authType: AuthType;
@@ -39,7 +40,9 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
                             {authType === AuthType.Login ? "Don't have an account yet?" : "Already created an account?"}
                         </Typography>
                         <Typography sx={{ cursor: 'pointer', textDecoration: 'underline', color: '#454545' }}>
-                            {authType === AuthType.Login ? "Sign up" : "Login"}
+                            <Link to={authType === AuthType.Login ? "/SignUp" : "/"}>
+                                {authType === AuthType.Login ? "Sign up" : "Login"}
+                            </Link>
                         </Typography>
                     </Box>
                 </Box>
@@ -48,7 +51,7 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
 
                         {authType === AuthType.Login ? <LoginBlock /> : <SignUpBlock />}
 
-                        <Box sx={{ padding: authType === AuthType.SignUp ? '5% 10%'  : '3% 10%' }}>
+                        <Box sx={{ padding: authType === AuthType.SignUp ? '5% 10%' : '3% 10%' }}>
                             <Button variant="contained" disableElevation sx={{
                                 width: '80%', height: '28px', borderRadius: '30px', color: '#B1B1B1', backgroundColor: '#F9F9F9', textTransform: 'none',
                                 '&:hover': {
