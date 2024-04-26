@@ -24,7 +24,7 @@ const TodoLists = () => {
     };
 
     return (
-        <Box sx={{ height: '100%', margin: '15px 50px', padding: '2% 2%', borderRadius: '15px' }}>
+        <Box sx={{ height: '90%', margin: '15px 50px', padding: '2% 2%', borderRadius: '15px' }}>
             <Box sx={{ marginBottom: '15px', paddingRight: '20px', maxHeight: '75vh', overflow: 'auto' }}>
                 <TodoField />
                 <TodoField />
