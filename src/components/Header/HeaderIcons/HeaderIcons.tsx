@@ -1,6 +1,6 @@
 import Tooltip from '@mui/material/Tooltip';
 import Badge from '@mui/material/Badge';
-import { IHeaderIconsProps } from '../../../Models/IHeaderIconsProps';
+import { IHeaderIconsProps } from '../../../Models/Interfaces/IHeaderIconsProps';
 
 const HeaderIcons: React.FC<IHeaderIconsProps> = ({title, dotDisposition, Icon, invisible}) => {
     return (

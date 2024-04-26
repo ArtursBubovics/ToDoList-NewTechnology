@@ -8,7 +8,7 @@ import { Button, FormControlLabel, IconButton, Menu, MenuItem, Typography } from
 import Tooltip from '@mui/material/Tooltip';
 import HeaderIcons from './HeaderIcons/HeaderIcons';
 import DayNightSwith from '../../common/DayNightSwith';
-import { HeaderContentProps } from '../../Models/IHeaderContentProps';
+import { HeaderContentProps } from '../../Models/Interfaces/IHeaderContentProps';
 
 const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClose }) => {
     const invisible = false;

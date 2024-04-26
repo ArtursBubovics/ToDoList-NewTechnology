@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { IMenuState } from '../../Models/IMenuState';
+import { IMenuState } from '../../Models/Interfaces/IMenuState';
 
 const initialState: IMenuState = {
     isOpen: true

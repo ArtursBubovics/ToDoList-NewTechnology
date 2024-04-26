@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import MainMenuIcon from './MainMenuIcon/MainMenuIcon';
-import { IMenuState } from '../../Models/IMenuState';
+import { IMenuState } from '../../Models/Interfaces/IMenuState';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMenuSize } from '../../ReduxToolkit/Reducers/menu-reducer';
 
