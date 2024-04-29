@@ -7,6 +7,7 @@ import MainMenuIcon from './MainMenuIcon/MainMenuIcon';
 import { IMenuState } from '../../Models/Interfaces/IMenuState';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMenuSize } from '../../ReduxToolkit/Reducers/menu-reducer';
+import { Link } from 'react-router-dom';
 
 const MainMenu = () => {
 
@@ -19,12 +20,12 @@ const MainMenu = () => {
 
     const [isActiveHoverBtn, setIsActiveHoverBtn] = useState(false);
 
-    const toggleMenu = () => {//MainMenuContainer
+    const toggleMenu = () => {
         dispatch(setMenuSize());
         setIsActiveHoverBtn(false)
     };
 
-    const hoverMenuBtn = () => { //MainMenuContainer
+    const hoverMenuBtn = () => {
         setTimeout(() => {
             setIsActiveHoverBtn(!isActiveHoverBtn);
         }, 300);
@@ -54,8 +55,12 @@ const MainMenu = () => {
                 </Box>
 
                 <Box sx={{ padding: isOpen ? '11% 12% 0% 17%' : '26% 20% 16% 20%' }}>
-                    <MainMenuIcon imgPath="assets/images/ToDoIcon.png" text="To-do lists" isOpen={isOpen} />
-                    <MainMenuIcon imgPath="assets/images/ProfileIcon.png" text="Profile" isOpen={isOpen} />
+                    <Link to='/ToDoLists' style={{ textDecoration: 'none' }}>
+                        <MainMenuIcon imgPath="assets/images/ToDoIcon.png" text="To-do lists" isOpen={isOpen} />
+                    </Link>
+                    <Link to='/Profile' style={{ textDecoration: 'none' }}>
+                        <MainMenuIcon imgPath="assets/images/ProfileIcon.png" text="Profile" isOpen={isOpen} />
+                    </Link>
                 </Box>
                 <Box sx={{ paddingLeft: '20px', paddingRight: '30px' }}>
                     <Box sx={{ borderBottom: '2px solid #EBEBEB', width: '100%' }}></Box>
