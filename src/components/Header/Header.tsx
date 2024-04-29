@@ -9,9 +9,18 @@ import Tooltip from '@mui/material/Tooltip';
 import HeaderIcons from './HeaderIcons/HeaderIcons';
 import DayNightSwith from '../../common/DayNightSwith';
 import { HeaderContentProps } from '../../Models/Interfaces/IHeaderContentProps';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { setArchiveValue } from '../../ReduxToolkit/Reducers/archive-reducer';
 
 const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClose }) => {
     const invisible = false;
+
+    const dispatch = useDispatch();
+
+    const toggleDrawer = () => {
+        dispatch(setArchiveValue());
+    };
 
     return (
         <Box>
@@ -32,7 +41,9 @@ const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClo
                     <Box sx={{ display: 'flex', gap: '10px' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '5px' }}>
 
-                            <HeaderIcons title="Archive" dotDisposition={{ top: "3px", right: "-2px" }} Icon={ArchiveIcon} invisible={invisible}></HeaderIcons>
+                            <Box onClick={toggleDrawer}>
+                                <HeaderIcons title="Archive" dotDisposition={{ top: "3px", right: "-2px" }} Icon={ArchiveIcon} invisible={true}></HeaderIcons>
+                            </Box>
 
                             <HeaderIcons title="Alerts" dotDisposition={{ top: "3px", right: "5px" }} Icon={NotificationsIcon} invisible={invisible}></HeaderIcons>
 
