@@ -18,8 +18,8 @@ const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClo
 
     const dispatch = useDispatch();
 
-    const toggleDrawer = () => {
-        dispatch(setArchiveValue());
+    const toggleDrawer = (value: boolean) => {
+        dispatch(setArchiveValue(value));
     };
 
     return (
@@ -41,7 +41,7 @@ const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClo
                     <Box sx={{ display: 'flex', gap: '10px' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '5px' }}>
 
-                            <Box onClick={toggleDrawer}>
+                            <Box onClick={() => toggleDrawer(true)}>
                                 <HeaderIcons title="Archive" dotDisposition={{ top: "3px", right: "-2px" }} Icon={ArchiveIcon} invisible={true}></HeaderIcons>
                             </Box>
 

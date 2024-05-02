@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { IArchiveState } from '../../Models/Interfaces/IArchiveState';
 
 const initialState: IArchiveState = {
@@ -9,8 +9,8 @@ export const archiveSlice = createSlice({
     name: 'archive',
     initialState,
     reducers: {
-        setArchiveValue(state){
-            state.isOpen = !state.isOpen;
+        setArchiveValue(state, action: PayloadAction<boolean>){
+            state.isOpen = action.payload;
         }
     }
 })
