@@ -45,7 +45,7 @@ const MainMenu = () => {
                                 <Typography variant="body1" fontWeight="bold">
                                     YoloDo
                                 </Typography>
-                                <Box>live effectively</Box>
+                                <Typography>live effectively</Typography>
                             </Box>)}
 
                     </Box>
