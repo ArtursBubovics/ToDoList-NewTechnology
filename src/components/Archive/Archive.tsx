@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import { Paper, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { setArchiveValue } from '../../ReduxToolkit/Reducers/archive-reducer';
 import { IArchiveState } from '../../Models/Interfaces/IArchiveState';
@@ -12,6 +12,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import { RegularButtons } from '../../common/Buttons/RegularButtons/RegularButtons';
+import { ArchiveBlock } from './ArchiveBlock/ArchiveBlock';
 //import { useIsOverflow } from './ArchivesSroll/ArchivesSroll';
 
 const Search = styled('div')(({ theme }) => ({
@@ -130,54 +131,18 @@ export default function TemporaryDrawer() {
                         {
                         // ref={boxRef}
                         }
+
                         <Box sx={{ height: '73vh', overflow: 'auto' }} > 
-                            <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
-                                <Paper sx={{ width: '95%', height: '90%', marginBottom: '15px', marginTop: '5px', padding: '18px 18px 10px', fontSize: '18px' }} elevation={2}>
-                                    <Typography sx={{ fontSize: '18px', paddingBottom: '5px' }}>
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.
-                                    </Typography>
-                                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '90%' }}>
-                                        <RegularButtons sx={{ padding: '3px', marginRight: '5px', fontSize: '13px' }}>
-                                            Вернуть на доску
-                                        </RegularButtons>
-                                        <RegularButtons sx={{ padding: '3px', fontSize: '13px' }}>
-                                            Удалить
-                                        </RegularButtons>
-                                    </Box>
-                                </Paper>
-                            </Box>
 
-                            <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
-                                <Paper sx={{ width: '95%', height: '90%', marginBottom: '15px', marginTop: '5px', padding: '18px 18px 10px', fontSize: '18px' }} elevation={2}>
-                                    <Typography sx={{ fontSize: '18px', paddingBottom: '5px' }}>
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.
-                                    </Typography>
-                                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '90%' }}>
-                                        <RegularButtons sx={{ padding: '3px', marginRight: '5px', fontSize: '13px' }}>
-                                            Вернуть на доску
-                                        </RegularButtons>
-                                        <RegularButtons sx={{ padding: '3px', fontSize: '13px' }}>
-                                            Удалить
-                                        </RegularButtons>
-                                    </Box>
-                                </Paper>
-                            </Box>
+                            <ArchiveBlock text={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.'}/>
 
-                            <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
-                                <Paper sx={{ width: '95%', height: '90%', marginBottom: '15px', marginTop: '5px', padding: '18px 18px 10px', fontSize: '18px' }} elevation={2}>
-                                    <Typography sx={{ fontSize: '18px', paddingBottom: '5px' }}>
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.
-                                    </Typography>
-                                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '90%' }}>
-                                        <RegularButtons sx={{ padding: '3px', marginRight: '5px', fontSize: '13px' }}>
-                                            Вернуть на доску
-                                        </RegularButtons>
-                                        <RegularButtons sx={{ padding: '3px', fontSize: '13px' }}>
-                                            Удалить
-                                        </RegularButtons>
-                                    </Box>
-                                </Paper>
-                            </Box>
+
+                            <ArchiveBlock text={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.'}/>
+
+                            <ArchiveBlock text={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.'}/>
+
+                            <ArchiveBlock text={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.'}/>
+
 
                         </Box>
                     </Box>
