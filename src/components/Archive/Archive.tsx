@@ -101,7 +101,9 @@ export default function TemporaryDrawer() {
         <Box sx={{ width: 320, height: '100%', padding: '12px 17px 8px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'auto' }} role="presentation">
             <Box>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <IconsButtons Icon={CloseIcon} />
+                    <Box onClick={() => toggleDrawer(false)}>
+                        <IconsButtons Icon={CloseIcon} />
+                    </Box>
                 </Box>
                 <Typography sx={{ display: 'flex', justifyContent: 'center', fontSize: '30px', lineHeight: '0.7', paddingBottom: '24px' }}>
                     Archive
@@ -129,19 +131,19 @@ export default function TemporaryDrawer() {
                     </Box>
                     <Box sx={{ padding: '18px 15px' }}>
                         {
-                        // ref={boxRef}
+                            // ref={boxRef}
                         }
 
-                        <Box sx={{ height: '73vh', overflow: 'auto' }} > 
+                        <Box sx={{ height: '73vh', overflow: 'auto' }} >
 
-                            <ArchiveBlock text={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.'}/>
+                            <ArchiveBlock text={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.'} />
 
 
-                            <ArchiveBlock text={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.'}/>
+                            <ArchiveBlock text={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.'} />
 
-                            <ArchiveBlock text={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.'}/>
+                            <ArchiveBlock text={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.'} />
 
-                            <ArchiveBlock text={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.'}/>
+                            <ArchiveBlock text={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.'} />
 
 
                         </Box>
