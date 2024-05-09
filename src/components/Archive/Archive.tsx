@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import { Button, Typography } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { setArchiveValue } from '../../ReduxToolkit/Reducers/archive-reducer';
 import { IArchiveState } from '../../Models/Interfaces/IArchiveState';
@@ -11,6 +11,8 @@ import { IconsButtons } from '../../common/Buttons/IconsButtons/IconsButtons';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
+import { RegularButtons } from '../../common/Buttons/RegularButtons/RegularButtons';
+//import { useIsOverflow } from './ArchivesSroll/ArchivesSroll';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -60,15 +62,42 @@ export default function TemporaryDrawer() {
         dispatch(setArchiveValue(value));
     };
 
+
+
+
+
+    // const boxRef = React.useRef<HTMLDivElement>(null);
+    // const [isOverflow, setIsOverflow] = React.useState<boolean | undefined>(undefined);
+
+    // const { current } = boxRef;
+
+    // console.log(boxRef);
+    // console.log('boxRef.current ' + boxRef.current);
+
+    // React.useLayoutEffect(() => {
+    //     if (current) {
+    //         console.log('test 2');
+    //         const hasOverflow = current.scrollHeight > current.clientHeight;
+    //         setIsOverflow(hasOverflow);
+    //     }
+    // }, [current]);
+
+    // console.log('test 3 ' + isOverflow);
+
+    // console.log('--------------------------');
+
+
+
+
     interface RootState {
         archive: IArchiveState;
     }
 
-
     const isOpen = useSelector((state: RootState) => state.archive.isOpen);
 
+
     const DrawerList = (
-        <Box sx={{ width: 320, height: '100%', padding: '12px 17px 8px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'auto'}} role="presentation">
+        <Box sx={{ width: 320, height: '100%', padding: '12px 17px 8px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'auto' }} role="presentation">
             <Box>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <IconsButtons Icon={CloseIcon} />
@@ -81,9 +110,11 @@ export default function TemporaryDrawer() {
                 <Box>
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                         <Search sx={{
-                            border: '1px solid #F4F4F4',
+                            border: '1px solid #D4D4D4',
                             margin: '0', '@media (min-width: 600px)': {
                                 margin: '0'
+                            }, '@media (min-width: 900px)': {
+                                width: '29vh'
                             }
                         }}>
                             <SearchIconWrapper>
@@ -95,25 +126,60 @@ export default function TemporaryDrawer() {
                             />
                         </Search>
                     </Box>
-                    <Box sx={{height: '78vh', overflow: 'auto'}}>
-                        
-                        <Box>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.</Box>
-                        <Box>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.</Box>
-                        <Box>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.</Box>
-                        <Box>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.</Box>
-                        <Box>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.</Box>
-                        <Box>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.</Box>
-                        <Box>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.</Box>
-                        <Box>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.</Box>
-                        <Box>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.</Box>
-                        <Box>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.</Box>
+                    <Box sx={{ padding: '18px 15px' }}>
+                        {
+                        // ref={boxRef}
+                        }
+                        <Box sx={{ height: '73vh', overflow: 'auto' }} > 
+                            <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
+                                <Paper sx={{ width: '95%', height: '90%', marginBottom: '15px', marginTop: '5px', padding: '18px 18px 10px', fontSize: '18px' }} elevation={2}>
+                                    <Typography sx={{ fontSize: '18px', paddingBottom: '5px' }}>
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.
+                                    </Typography>
+                                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '90%' }}>
+                                        <RegularButtons sx={{ padding: '3px', marginRight: '5px', fontSize: '13px' }}>
+                                            Вернуть на доску
+                                        </RegularButtons>
+                                        <RegularButtons sx={{ padding: '3px', fontSize: '13px' }}>
+                                            Удалить
+                                        </RegularButtons>
+                                    </Box>
+                                </Paper>
+                            </Box>
 
-                        <Box>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.</Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
+                                <Paper sx={{ width: '95%', height: '90%', marginBottom: '15px', marginTop: '5px', padding: '18px 18px 10px', fontSize: '18px' }} elevation={2}>
+                                    <Typography sx={{ fontSize: '18px', paddingBottom: '5px' }}>
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.
+                                    </Typography>
+                                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '90%' }}>
+                                        <RegularButtons sx={{ padding: '3px', marginRight: '5px', fontSize: '13px' }}>
+                                            Вернуть на доску
+                                        </RegularButtons>
+                                        <RegularButtons sx={{ padding: '3px', fontSize: '13px' }}>
+                                            Удалить
+                                        </RegularButtons>
+                                    </Box>
+                                </Paper>
+                            </Box>
 
-                        <Box>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.</Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
+                                <Paper sx={{ width: '95%', height: '90%', marginBottom: '15px', marginTop: '5px', padding: '18px 18px 10px', fontSize: '18px' }} elevation={2}>
+                                    <Typography sx={{ fontSize: '18px', paddingBottom: '5px' }}>
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.
+                                    </Typography>
+                                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '90%' }}>
+                                        <RegularButtons sx={{ padding: '3px', marginRight: '5px', fontSize: '13px' }}>
+                                            Вернуть на доску
+                                        </RegularButtons>
+                                        <RegularButtons sx={{ padding: '3px', fontSize: '13px' }}>
+                                            Удалить
+                                        </RegularButtons>
+                                    </Box>
+                                </Paper>
+                            </Box>
 
-                        <Box>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt nam provident rerum quaerat animi ducimus reprehenderit magnam. Id, quibusdam vel.</Box>
-
+                        </Box>
                     </Box>
                 </Box>
 
@@ -121,11 +187,11 @@ export default function TemporaryDrawer() {
             <Box>
                 <Divider sx={{ marginBottom: '8px' }} />
                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button sx={{ color: '#9A9A9A' }}>
+                    <RegularButtons sx={{ color: '#9A9A9A', padding: '6px 8px' }}>
                         <Typography sx={{ textTransform: 'none' }}>
                             Delete all
                         </Typography>
-                    </Button>
+                    </RegularButtons>
                 </Box>
             </Box>
         </Box>

@@ -10,7 +10,10 @@ export const IconsButtons: React.FC<IconsButtonsProps> = ({ Icon }) => {
         <Button sx={{
             padding: '0',
             minWidth: '0',
-            color: '#C3C3C3'
+            color: '#C3C3C3',
+            '&:hover': {
+                backgroundColor: '#F5F5F5'
+            }
         }}>
             <Icon />
         </Button>

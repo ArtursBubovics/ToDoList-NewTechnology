@@ -25,7 +25,7 @@ const TodoField = () => {
 
                         <FieldsIcons title="Increase field" imgPath="assets/images/loupeIcon.png"></FieldsIcons>
 
-                        <FieldsIcons title="Delete Field" imgPath="assets/images/deleteIcon.png"></FieldsIcons>
+                        <FieldsIcons title="Add in archive" imgPath="assets/images/deleteIcon.png"></FieldsIcons>
 
                     </Box>
                 )}
