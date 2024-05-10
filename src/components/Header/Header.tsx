@@ -11,7 +11,7 @@ import DayNightSwith from '../../common/DayNightSwith';
 import { HeaderContentProps } from '../../Models/Interfaces/IHeaderContentProps';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { setArchiveValue } from '../../ReduxToolkit/Reducers/archive-reducer';
+import { setArchiveValue } from '../../ReduxToolkit/Reducers/headerMenu-reducer';
 
 const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClose }) => {
     const invisible = false;

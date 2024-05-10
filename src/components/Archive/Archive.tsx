@@ -4,8 +4,8 @@ import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { setArchiveValue } from '../../ReduxToolkit/Reducers/archive-reducer';
-import { IArchiveState } from '../../Models/Interfaces/IArchiveState';
+import { setArchiveValue } from '../../ReduxToolkit/Reducers/headerMenu-reducer';
+import { IHeaderMenuState } from '../../Models/Interfaces/IHeaderMenuState';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconsButtons } from '../../common/Buttons/IconsButtons/IconsButtons';
 import SearchIcon from '@mui/icons-material/Search';
@@ -91,10 +91,10 @@ export default function TemporaryDrawer() {
 
 
     interface RootState {
-        archive: IArchiveState;
+        headerMenu: IHeaderMenuState;
     }
 
-    const isOpen = useSelector((state: RootState) => state.archive.isOpen);
+    const isOpen = useSelector((state: RootState) => state.headerMenu.isArchiveOpen);
 
 
     const DrawerList = (

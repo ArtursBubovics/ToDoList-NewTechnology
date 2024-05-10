@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import menuReducer from "./Reducers/menu-reducer";
-import archiveReducer from "./Reducers/archive-reducer";
+import headerMenuReducer from "./Reducers/headerMenu-reducer";
 
 const store = configureStore({
     reducer:{
         menu: menuReducer,
-        archive: archiveReducer
+        headerMenu: headerMenuReducer
     }
 })
 
