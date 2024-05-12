@@ -5,7 +5,8 @@ import Profile from './components/Profile/ProfileUnitedBlock';
 import { Login } from './components/Login/Login';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { LinearProgress } from '@mui/material';
-import TemporaryDrawer from './components/Archive/Archive';
+import Archive from './components/Archive/Archive';
+import Notification from './components/Notification/Notification';
 
 function App() {
 
@@ -19,7 +20,8 @@ function App() {
           <Route path="/Profile" element={<Profile />} />
         </Routes>
 
-        <TemporaryDrawer/>
+        <Archive/>
+        <Notification/>
 
         {false &&<LinearProgress variant="determinate" value={20} sx={{position: 'absolute', zIndex: 1, top: 0, right: 0, left: 0, height: '3px'}}/>}
       </Box>

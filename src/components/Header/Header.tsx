@@ -11,15 +11,19 @@ import DayNightSwith from '../../common/DayNightSwith';
 import { HeaderContentProps } from '../../Models/Interfaces/IHeaderContentProps';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { setArchiveValue } from '../../ReduxToolkit/Reducers/headerMenu-reducer';
+import { setArchiveValue, setNotficationOpenValue } from '../../ReduxToolkit/Reducers/headerMenu-reducer';
 
 const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClose }) => {
     const invisible = false;
 
     const dispatch = useDispatch();
 
-    const toggleDrawer = (value: boolean) => {
+    const toggleArchiveDrawer = (value: boolean) => {
         dispatch(setArchiveValue(value));
+    };
+
+    const toggleNotficationDrawer = (value: boolean) => {
+        dispatch(setNotficationOpenValue(value));
     };
 
     return (
@@ -41,12 +45,12 @@ const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClo
                     <Box sx={{ display: 'flex', gap: '10px' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '5px' }}>
 
-                            <Box onClick={() => toggleDrawer(true)}>
+                            <Box onClick={() => toggleArchiveDrawer(true)}>
                                 <HeaderIcons title="Archive" dotDisposition={{ top: "3px", right: "-2px" }} Icon={ArchiveIcon} invisible={true}></HeaderIcons>
                             </Box>
-
-                            <HeaderIcons title="Alerts" dotDisposition={{ top: "3px", right: "5px" }} Icon={NotificationsIcon} invisible={invisible}></HeaderIcons>
-
+                            <Box onClick={() => toggleNotficationDrawer(true)}>
+                                <HeaderIcons title="Alerts" dotDisposition={{ top: "3px", right: "5px" }} Icon={NotificationsIcon} invisible={invisible}></HeaderIcons>
+                            </Box>
                         </Box>
                         <Tooltip title="Quick settings" placement="bottom" arrow>
                             <IconButton sx={{ marginTop: '1px', cursor: 'pointer' }} onClick={handleClick} aria-controls="simple-menu"

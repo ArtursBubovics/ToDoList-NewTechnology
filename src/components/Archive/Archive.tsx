@@ -97,7 +97,7 @@ export default function TemporaryDrawer() {
     const isOpen = useSelector((state: RootState) => state.headerMenu.isArchiveOpen);
 
 
-    const DrawerList = (
+    const DrawerArhiveList = (
         <Box sx={{ width: 320, height: '100%', padding: '12px 17px 8px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'auto' }} role="presentation">
             <Box>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -167,7 +167,7 @@ export default function TemporaryDrawer() {
     return (
         <Box sx={{ position: 'absolute', zIndex: 1, top: 0, right: 0, left: 0 }}>
             <Drawer sx={{ '& .css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop': { cursor: 'pointer' } }} anchor="left" open={isOpen} onClose={() => toggleDrawer(false)}>
-                {DrawerList}
+                {DrawerArhiveList}
             </Drawer>
         </Box>
     );

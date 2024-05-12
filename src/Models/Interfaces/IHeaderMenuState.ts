@@ -1,3 +1,4 @@
 export interface IHeaderMenuState {
-    isArchiveOpen: boolean;
+    isArchiveOpen: boolean,
+    isNotificationOpen: boolean;
 }
