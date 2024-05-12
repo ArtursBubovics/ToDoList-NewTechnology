@@ -14,8 +14,6 @@ interface NotificationProps {
     text: string;
 }
 
-
-
 export default function Notification() {
 
     const props: NotificationProps = {
@@ -47,7 +45,7 @@ export default function Notification() {
 
         <Box sx={{ width: '100%', height: 550 }}>
             <Box sx={{ width: '100%', height: 490, overflow: 'auto' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: '1% 1% 0 0' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: '1% 1% 0 0' }} onClick={() => toggleDrawer(false)}>
                     <IconsButtons Icon={CloseIcon} />
                 </Box>
                 <Box sx={{ padding: '0 45px 50px' }}>
