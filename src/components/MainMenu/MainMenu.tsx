@@ -38,14 +38,16 @@ const MainMenu = () => {
 
                     <Box sx={{ display: 'flex' }}>
 
-                        <Box><img src="assets/images/Logo.png" alt="" /></Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}><img src="assets/images/Logo.png" alt="" /></Box>
 
                         {isOpen && (
-                            <Box >
-                                <Typography variant="body1" fontWeight="bold">
-                                    YoloDo
-                                </Typography>
-                                <Typography>live effectively</Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Box>
+                                    <Typography sx={{ lineHeight: '1.25' }} variant="body1" fontWeight="bold">
+                                        YoloDo
+                                    </Typography>
+                                    <Typography sx={{ lineHeight: '1.25' }}>live effectively</Typography>
+                                </Box>
                             </Box>)}
 
                     </Box>
