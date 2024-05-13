@@ -69,7 +69,9 @@ const MainMenu = () => {
                     <Box sx={{ marginLeft: '20px', marginTop: '10px', marginRight: '40px', borderBottom: '2px solid #EBEBEB', width: '50%' }}></Box>
                 </Box>
                 <Box sx={{ padding: isOpen ? '10% 11% 0% 16%' : '29% 16% 0% 19%' }}>
-                    <MainMenuIcon imgPath="assets/images/LogOutIcon.png" text="Log out" isOpen={isOpen} />
+                    <Link to='/' style={{ textDecoration: 'none' }}>
+                        <MainMenuIcon imgPath="assets/images/LogOutIcon.png" text="Log out" isOpen={isOpen} />
+                    </Link>
                 </Box>
             </Box>
             <Box>
