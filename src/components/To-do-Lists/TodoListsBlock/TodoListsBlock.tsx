@@ -43,11 +43,12 @@ const TodoLists = () => {
                     </Box>
                     <Box sx={{ padding: '2px 2px' }}>
                         <Button variant="outlined" onClick={handleEnterValueSubmit} sx={{
-                            width: '80px', height: '25px', borderRadius: '30px', color: '#A9A9A9', border: '1px solid #A9A9A9', '&:hover': {
-                                borderColor: '#808080',
-                                backgroundColor: '#F5F5F5'
+                            width: '80px', height: '25px', borderRadius: '30px', color: '#A9A9A9', border: '1px solid #CBCBCB', '&:hover': {
+                                borderColor: '#A0A0A0',
+                                backgroundColor: '#FFFFFF',
+                                border: '1px solid #A9A9A9'
                             }
-                        }} endIcon={<SendIcon sx={{ width: '15px', height: '15px' }}/>}><Typography style={{ display: 'flex', width: 'auto', justifyContent: 'center', marginRight: '-5px', fontSize: '13px' }}>SEND</Typography></Button>
+                        }} endIcon={<SendIcon sx={{ width: '15px', height: '15px' }} />}><Typography style={{ display: 'flex', width: 'auto', justifyContent: 'center', marginRight: '-5px', fontSize: '13px' }}>SEND</Typography></Button>
                     </Box>
                 </Box>
             </Box>
