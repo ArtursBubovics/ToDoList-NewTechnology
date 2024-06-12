@@ -48,7 +48,7 @@ const TodoLists = () => {
                                 backgroundColor: '#FFFFFF',
                                 border: '1px solid #A9A9A9'
                             }
-                        }} endIcon={<SendIcon sx={{ width: '15px', height: '15px' }} />}><Typography style={{ display: 'flex', width: 'auto', justifyContent: 'center', marginRight: '-5px', fontSize: '13px' }}>SEND</Typography></Button>
+                        }} endIcon={<SendIcon sx={{ width: '15px', height: '15px' }}/>}><Typography style={{ display: 'flex', width: 'auto', justifyContent: 'center', marginRight: '-5px', fontSize: '13px' }}>SEND</Typography></Button>
                     </Box>
                 </Box>
             </Box>
