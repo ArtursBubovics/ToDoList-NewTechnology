@@ -21,13 +21,12 @@
 
 1. [Project Description](#-project-description)
 2. [Technologies Used](#-technologies-used)
-3. [Features](#-features)
-4. [Demo](#-demo)
+3. [Demo](#-demo)
     * [Video](#-video)
     * [Screenshots](#-screenshots)
-5. [Installation](#-installation)
-6. [Usage](#-usage)
-7. [About Me](#-my-profile)
+4. [Installation](#-installation)
+5. [Usage](#-usage)
+6. [About Me](#-my-profile)
 
 <br>
 
@@ -54,8 +53,6 @@ This is a to do list project where I use new technologies for programming. This 
 <img width="12" />
 </div>
 
-## ✨ Features
-
 ## 🖥️ Demo
 
   * ## 📹 Video
@@ -63,9 +60,13 @@ This is a to do list project where I use new technologies for programming. This 
   * ## 📸 Screenshots
 
 ## ⚙️ Installation
+
 ## 🚀 Usage
 
 ## :innocent: My Profile
+
+You can learn more about me and my projects by clicking on my profile icon or by following the link below.
+(https://github.com/ArtursBubovics)
 
 ----
 
