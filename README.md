@@ -37,9 +37,26 @@ This is a to do list project where I use new technologies for programming. This 
 
 ## 🛠️ Technologies Used
 
+<div style="display: flex;">
+<img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/typescript-colored.svg" height="40" alt="TypeScript"  />
+<img width="12" />
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" height="40" alt="react logo"  />
+<img width="12" />
+<img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/materialui-colored.svg" height="40" alt="Material UI"  />
+<img width="12" />
+<img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/redux-colored.svg" height="40" alt="Redux"  />
+<img width="12" />
+<img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/express-colored.svg" height="40" alt="Express.js"  />
+<img width="12" />
+<img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/graphql-colored.svg" height="40" alt="GraphQL"  />
+<img width="12" />
+<img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/postgresql-colored.svg" height="40" alt="PostgreSQL"  />
+<img width="12" />
+</div>
+
 ## ✨ Features
 
-## 🎥 Demo
+## 🖥️ Demo
 
   * ## 📹 Video
 
@@ -47,4 +64,13 @@ This is a to do list project where I use new technologies for programming. This 
 
 ## ⚙️ Installation
 ## 🚀 Usage
+
 ## :innocent: My Profile
+
+----
+
+<div align="center">
+    
+#### Thank you for your attention!
+
+</div>
