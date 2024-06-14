@@ -61,7 +61,31 @@ This is a to do list project where I use new technologies for programming. This 
 
 ## ⚙️ Installation
 
+1. **Clone a repository:** Open a terminal (or command prompt) on your computer and run the git clone command from the GitHub repository URL:
+
+```bash
+git clone https://github.com/ArtursBubovics/ToDoList-NewTechnology.git
+```
+
+2. **Dependency installation:** Before starting the project, make sure that all dependencies are installed. This is usually done using npm (Node Package Manager) for Node.js projects:
+
+```bash
+npm install
+```
+
 ## 🚀 Usage
+
+1. To start a project for Frontend you need to enter:  
+
+```bash
+npm run frontend-start
+```
+
+2. To start a project for Backend you need to enter:  
+
+```bash
+npm run backend-dev
+```
 
 ## :innocent: My Profile
 
