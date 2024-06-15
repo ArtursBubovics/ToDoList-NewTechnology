@@ -20,13 +20,11 @@
 ## 📚 Table of Contents
 
 1. [Project Description](#-project-description)
-2. [Technologies Used](#-technologies-used)
-3. [Demo](#-demo)
-    * [Video](#-video)
-    * [Screenshots](#-screenshots)
-4. [Installation](#-installation)
-5. [Usage](#-usage)
-6. [About Me](#-my-profile)
+2. [Technologies Used](#technologies_used)
+3. [Demo](#demo)
+4. [Installation](#installation)
+5. [Usage](#usage)
+6. [My Profile](#my_profile)
 
    <br>
 
@@ -36,7 +34,7 @@ This is a to do list project where I use new technologies for programming. This 
 
    <br>
 
-## 🛠️ Technologies Used
+## 🛠️ <a name="technologies_used">Technologies Used</a> 
 
 <div style="display: flex;">
 <img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/typescript-colored.svg" height="40" alt="TypeScript"  />
@@ -57,7 +55,7 @@ This is a to do list project where I use new technologies for programming. This 
 
    <br>
 
-## 🖥️ Demo
+## 🖥️ <a name="demo">Demo</a> 
 
    ### Login 
    
@@ -129,7 +127,7 @@ This is a to do list project where I use new technologies for programming. This 
    <br>
    <br>
 
-## ⚙️ Installation
+## ⚙️ <a name="installation">Installation</a>
 
 1. **Clone a repository:** Open a terminal (or command prompt) on your computer and run the git clone command from the GitHub repository URL:
 
@@ -145,7 +143,7 @@ npm install
 
    <br>
 
-## 🚀 Usage
+## 🚀 <a name="usage">Usage</a>
 
 1. To start a project for Frontend you need to enter:  
 
@@ -161,7 +159,7 @@ npm run backend-dev
 
    <br>
 
-## :innocent: My Profile
+## :innocent: <a name="my_profile"> My Profile</a>
 
 You can learn more about me and my projects by clicking on my profile icon or by following the link below.
 (https://github.com/ArtursBubovics)
