@@ -28,11 +28,13 @@
 5. [Usage](#-usage)
 6. [About Me](#-my-profile)
 
-<br>
+   <br>
 
 ## 📖 Project Description
 
 This is a to do list project where I use new technologies for programming. This to do list differs from others in its unusual design and capabilities. I have been working on this project and will continue to do so.
+
+   <br>
 
 ## 🛠️ Technologies Used
 
@@ -53,13 +55,79 @@ This is a to do list project where I use new technologies for programming. This 
 <img width="12" />
 </div>
 
+   <br>
+
 ## 🖥️ Demo
 
-  * ## 📸 Screenshots
-    
-<img src="https://github.com/ArtursBubovics/ToDoList-NewTechnology/blob/main/images/Login.png" alt="Login" style="border: 2px solid black;"/>
+   ### Login 
+   
+   <kbd> 
+      <img src="https://github.com/ArtursBubovics/ToDoList-NewTechnology/blob/main/images/Login.png" alt="Login"/>
+   </kbd>
 
+   <br>
+   <br>
+   <br>
 
+   ### Sign up 
+   
+   <kbd> 
+      <img src="https://github.com/ArtursBubovics/ToDoList-NewTechnology/blob/main/images/Sign_up.png" alt="Sign Up"/>
+   </kbd> 
+   
+   <br>
+   <br>
+   <br>
+
+   ### To Do List
+   
+   <kbd> 
+      <img src="https://github.com/ArtursBubovics/ToDoList-NewTechnology/blob/main/images/Main_to_do_list.png" alt="To Do List"/>
+   </kbd>
+   
+   <br>
+   <br>
+   <br>
+
+   ### Profile 
+     
+   <kbd> 
+      <img src="https://github.com/ArtursBubovics/ToDoList-NewTechnology/blob/main/images/Main_profile.PNG" alt="Profile"/>
+   </kbd>  
+   
+   <br>
+   <br>
+   <br>
+
+   ### Left Menu
+   
+   <kbd> 
+      <img src="https://github.com/ArtursBubovics/ToDoList-NewTechnology/blob/main/images/Main_slide_left_menu.PNG" alt="Left Menu"/>
+   </kbd> 
+   
+   <br>
+   <br>
+   <br>
+
+   ### Archive
+   
+   <kbd> 
+      <img src="https://github.com/ArtursBubovics/ToDoList-NewTechnology/blob/main/images/Main_archivePNG.PNG" alt="Archive"/>
+   </kbd>  
+   
+   <br>
+   <br>
+   <br>
+
+   ### Notification
+   
+   <kbd> 
+      <img src="https://github.com/ArtursBubovics/ToDoList-NewTechnology/blob/main/images/Main_notifications.PNG" alt="Notification"/>
+   </kbd>  
+
+   <br>
+   <br>
+   <br>
 
 ## ⚙️ Installation
 
@@ -75,6 +143,8 @@ git clone https://github.com/ArtursBubovics/ToDoList-NewTechnology.git
 npm install
 ```
 
+   <br>
+
 ## 🚀 Usage
 
 1. To start a project for Frontend you need to enter:  
@@ -88,6 +158,8 @@ npm run frontend-start
 ```bash
 npm run backend-dev
 ```
+
+   <br>
 
 ## :innocent: My Profile
 
