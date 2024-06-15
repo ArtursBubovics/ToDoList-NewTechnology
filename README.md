@@ -55,9 +55,11 @@ This is a to do list project where I use new technologies for programming. This 
 
 ## 🖥️ Demo
 
-  * ## 📹 Video
-
   * ## 📸 Screenshots
+    
+<img src="https://github.com/ArtursBubovics/ToDoList-NewTechnology/blob/main/images/Login.png" alt="Login" style="border: 2px solid black;"/>
+
+
 
 ## ⚙️ Installation
 
