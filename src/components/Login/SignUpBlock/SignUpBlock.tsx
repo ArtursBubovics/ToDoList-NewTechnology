@@ -5,7 +5,16 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useState } from "react";
 import { CustomTextField } from "../../../common/InputFields/CustomTextField";
 
-export const SignUpBlock = () => {
+interface SignUpBlockProps {
+    name: string;
+    setName: React.Dispatch<React.SetStateAction<string>>;
+    password: string;
+    setPassword: React.Dispatch<React.SetStateAction<string>>;
+    gmail: string;
+    setGmail: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const SignUpBlock: React.FC<SignUpBlockProps> = ({ name, setName, password, setPassword, gmail, setGmail }) => {
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -15,12 +24,14 @@ export const SignUpBlock = () => {
         event.preventDefault();
     }
 
+
     return (
         <Box>
             <CustomTextField
                 backgroundColor='#F9F9F9'
                 noBorder={true}
-                value=''
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 label='Name'
                 variant='outlined'
                 size='medium'
@@ -29,7 +40,8 @@ export const SignUpBlock = () => {
             <CustomTextField
                 backgroundColor='#F9F9F9'
                 noBorder={true}
-                value=''
+                value={gmail}
+                onChange={(e) => setGmail(e.target.value)}
                 label='Gmail'
                 variant='outlined'
                 size='medium'
@@ -49,6 +61,8 @@ export const SignUpBlock = () => {
                 <OutlinedInput
                     id="outlined-adornment-password"
                     type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     endAdornment={
                         <InputAdornment position="end">
                             <IconButton

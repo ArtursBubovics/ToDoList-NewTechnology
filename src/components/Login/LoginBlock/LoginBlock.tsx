@@ -5,7 +5,14 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useState } from "react";
 import { CustomTextField } from "../../../common/InputFields/CustomTextField";
 
-export const LoginBlock = () => {
+interface LoginBlockProps {
+    name: string;
+    setName: React.Dispatch<React.SetStateAction<string>>;
+    password: string;
+    setPassword: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const LoginBlock: React.FC<LoginBlockProps> = ({ name, setName, password, setPassword }) => {
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -21,7 +28,8 @@ export const LoginBlock = () => {
                 <CustomTextField
                     backgroundColor='#F9F9F9'
                     noBorder={true}
-                    value=''
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     label='Name'
                     variant='outlined'
                     size='medium'
@@ -42,6 +50,8 @@ export const LoginBlock = () => {
                     <OutlinedInput
                         id="outlined-adornment-password"
                         type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton

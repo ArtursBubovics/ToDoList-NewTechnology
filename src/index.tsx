@@ -7,8 +7,8 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-// import { ApolloProvider } from '@apollo/client';
-// import client from '../server/apolloClient/client';
+import { ApolloProvider } from '@apollo/client';
+import client from './server/apolloClient/client';
 
 
 import { Provider } from 'react-redux';
@@ -19,10 +19,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    {/* <ApolloProvider client={client}> */}
+    <ApolloProvider client={client}>
       <Provider store={store}>
         <App />
       </Provider>
-    {/* </ApolloProvider> */}
+    </ApolloProvider>
   </React.StrictMode>
 );

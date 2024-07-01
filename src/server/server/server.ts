@@ -21,6 +21,10 @@ const typeDefs = gql`
     gmail: String
   }
 
+  type Mutation {
+    createUser(name: String!, password: String!, gmail: String!): User
+  }
+
 `;
 
 const server = new ApolloServer({ typeDefs, resolvers: resolver });
