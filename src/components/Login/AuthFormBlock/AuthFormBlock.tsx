@@ -10,6 +10,7 @@ import { useState } from "react";
 import { validateSignUpData, validateLoginData } from "../../../common/Validation/validation";
 import bcrypt from 'bcryptjs';
 import CryptoJS from 'crypto-js';
+import { useAlert } from '../../../common/Alerts/AlertContext';
 
 const CREATE_USER = gql`
   mutation CreateUser($name: String!, $password: String!, $gmail: String!) {
@@ -32,10 +33,11 @@ const CHECK_USER = gql`
 `;
 
 interface AuthFormBlockProps {
-  authType: AuthType;
+  authType: AuthType,
 }
 
 export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
+  const { setAlert } = useAlert();
 
   const [createUser, { data: createUserMutationData, loading: createUserLoading, error: createUserError }] = useMutation(CREATE_USER);
   const [checkUser, { data: checkUserData, loading: checkUserLoading, error: checkUserError }] = useLazyQuery(CHECK_USER);
@@ -44,20 +46,30 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
   const [password, setPassword] = useState('');
   const [gmail, setGmail] = useState('');
 
-  const secretKey = 'your-secret-key';
+  const secretKey = 'secret-key';
+
+
+
 
   const handleSignUp = async () => {
-    const data = { name, password, gmail };
-
-    await validateSignUpData(data);
 
     try {
+      const validationData = { name, password, gmail };
+
+      const result = await validateSignUpData(validationData);
+
+      if (!result.valid) {
+        setAlert(`Validation errors: ${result.errors}`, 'error');
+      }
+
+
       const hashedPassword = await bcrypt.hash(password, 10);
       const encryptedGmail = CryptoJS.AES.encrypt(gmail, secretKey).toString();
 
       await checkUser({ variables: { name, hashedPassword, encryptedGmail } });
       await createUser({ variables: { name, hashedPassword, encryptedGmail } });
-      console.log('User created:', createUserMutationData);
+      
+      setAlert('User created successful', 'success');
 
       setName('');
       setPassword('');
@@ -68,20 +80,27 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
     }
   };
 
-  const handleLogin = async () => {
-    const data = { name, password, gmail };
 
-    await validateLoginData(data);
+
+  const handleLogin = async () => {
 
     try {
+      const validationData = { name, password, gmail };
+
+      const result = await validateLoginData(validationData);
+
+      if (!result.valid) {
+        setAlert(`Validation errors: ${result.errors}`, 'error');
+      }
+
       const encryptedGmail = CryptoJS.AES.encrypt(gmail, secretKey).toString();
 
       const { data } = await checkUser({ variables: { name, password, gmail: encryptedGmail } });
 
       if (data.checkUser && await bcrypt.compare(password, data.checkUser.password)) {
-        console.log('Login successful:', checkUserData);
+        setAlert(`Login successful`, 'success');
       } else {
-        console.error('Invalid credentials');
+        setAlert(`Invalid credentials`, 'error');
       }
 
       setName('');
