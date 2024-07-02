@@ -9,26 +9,24 @@ import { gql, useLazyQuery, useMutation } from '@apollo/client';
 import { useState } from "react";
 import { validateSignUpData, validateLoginData } from "../../../common/Validation/validation";
 import bcrypt from 'bcryptjs';
-import CryptoJS from 'crypto-js';
 import { useAlert } from '../../../common/Alerts/AlertContext';
+import { secretKey } from '../../../settingsTS';
+import CryptoJS from 'crypto-js';
 
 const CREATE_USER = gql`
   mutation CreateUser($name: String!, $password: String!, $gmail: String!) {
     createUser(name: $name, password: $password, gmail: $gmail) {
       id
       name
+      password
       gmail
     }
   }
 `;
 
 const CHECK_USER = gql`
-  query CheckUser($name: String!, $password: String!, $gmail: String!) {
-    checkUser(name: $name, password: $password, gmail: $gmail) {
-      id
-      name
-      gmail
-    }
+  query CheckUser($name: String!, $gmail: String, $password: String) {
+    checkUser(name: $name, gmail: $gmail, password: $password)
   }
 `;
 
@@ -46,7 +44,7 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
   const [password, setPassword] = useState('');
   const [gmail, setGmail] = useState('');
 
-  const secretKey = 'secret-key';
+
 
 
 
@@ -55,7 +53,6 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
 
     try {
       const validationData = { name, password, gmail };
-
       const result = await validateSignUpData(validationData);
 
       if (!result.valid) {
@@ -63,20 +60,33 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
       }
 
 
+      const { data } = await checkUser({ variables: { name, gmail } });
+      
+      console.log('data: ' + data);
+      console.log(data);
+      
+      if (data.checkUser) {
+        setAlert('User already exists!', 'error');
+        return;
+      }
+      console.log('go1');
       const hashedPassword = await bcrypt.hash(password, 10);
       const encryptedGmail = CryptoJS.AES.encrypt(gmail, secretKey).toString();
-
-      await checkUser({ variables: { name, hashedPassword, encryptedGmail } });
-      await createUser({ variables: { name, hashedPassword, encryptedGmail } });
-      
-      setAlert('User created successful', 'success');
-
-      setName('');
-      setPassword('');
-      setGmail('');
-
+      console.log('go2');
+      const createUserResult = await createUser({ variables: { name, password: hashedPassword, gmail: encryptedGmail } });
+      console.log('go3');
+      if (createUserResult.data.createUser) {
+        console.log('go4');
+        setAlert('User created successfully!', 'success');
+        setName('');
+        setPassword('');
+        setGmail('');
+      } else {
+        setAlert('Failed to create user1!', 'error');
+      }
     } catch (err) {
       console.error('Error creating user:', err);
+      setAlert('Failed to create user2!', 'error');
     }
   };
 
@@ -91,24 +101,39 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
 
       if (!result.valid) {
         setAlert(`Validation errors: ${result.errors}`, 'error');
+        return;
       }
 
-      const encryptedGmail = CryptoJS.AES.encrypt(gmail, secretKey).toString();
+      const { data, error } = await checkUser({ variables: { name, password } });
+      console.log('data: ' + data);
+      console.log(data);
+      console.log('error: ' + error);
 
-      const { data } = await checkUser({ variables: { name, password, gmail: encryptedGmail } });
+      if (error) {
+        console.error('Error fetching user:', error);
+        setAlert('Failed to log in!', 'error');
+        return;
+      }
 
-      if (data.checkUser && await bcrypt.compare(password, data.checkUser.password)) {
-        setAlert(`Login successful`, 'success');
+      if (!data || !data.checkUser) {
+        setAlert('User not found!', 'info');
+        return;
+      }
+
+      if (data) {
+        setAlert('Login successful!', 'success');
+
+        setName('');
+        setPassword('');
+        setGmail('');
+
       } else {
-        setAlert(`Invalid credentials`, 'error');
+        setAlert('Invalid credentials!', 'error');
       }
-
-      setName('');
-      setPassword('');
-      setGmail('');
 
     } catch (err) {
-      console.error('Error creating user:', err);
+      console.error('Error logging in:', err);
+      setAlert('Failed to log in!', 'error');
     }
   };
 

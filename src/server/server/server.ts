@@ -10,8 +10,9 @@ const PORT = 3005;
 const typeDefs = gql`
 
   type Query {
-    user(id: ID!): User
+    user(gmail: String!): User
     users: [User]
+    checkUser(name: String!, gmail: String, password: String): Boolean
   }
 
   type User {
