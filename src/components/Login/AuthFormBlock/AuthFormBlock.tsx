@@ -5,78 +5,103 @@ import { LoginBlock } from "../LoginBlock/LoginBlock";
 import { SignUpBlock } from "../SignUpBlock/SignUpBlock";
 import { AuthType } from "../../../Models/Enums/AuthEnum";
 import { Link } from "react-router-dom"
-import { gql, useLazyQuery, useMutation } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 import { useState } from "react";
 import { validateSignUpData, validateLoginData } from "../../../common/Validation/validation";
-import bcrypt from 'bcryptjs';
 import { useAlert } from '../../../common/Alerts/AlertContext';
-import { secretKey } from '../../../settingsTS';
-import CryptoJS from 'crypto-js';
+import Cookies from 'universal-cookie';
 
-const CREATE_USER = gql`
-  mutation CreateUser($name: String!, $password: String!, $gmail: String!) {
-    createUser(name: $name, password: $password, gmail: $gmail) {
-      id
-      name
-      password
-      gmail
+const REGISTER_USER = gql`
+  mutation RegisterUser($name: String!, $gmail: String!, $password: String!) {
+    registerUser(name: $name, gmail: $gmail, password: $password) {
+      accessToken
+      refreshToken
     }
   }
 `;
 
-const CHECK_USER = gql`
-  query CheckUser($name: String!, $gmail: String, $password: String) {
-    checkUser(name: $name, gmail: $gmail, password: $password)
+const LOGIN_USER = gql`
+  mutation LoginUser($name: String!, $password: String!) {
+    loginUser(name: $name, password: $password) {
+      accessToken
+      refreshToken
+    }
   }
 `;
+
+const REFRESH_TOKENS = gql`
+  mutation RefreshTokens($refreshToken: String!) {
+    refreshTokens(refreshToken: $refreshToken) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+
+const VERIFY_TOKEN = gql`
+  mutation VerifyToken($token: String!, $type: TokenType!) {
+    verifyToken(token: $token, type: $type) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+
+enum TokenType {
+  ACCESS = 'ACCESS',
+  REFRESH = 'REFRESH'
+}
 
 interface AuthFormBlockProps {
   authType: AuthType,
 }
-
+// !!!! Вместо refreToken, generate..., verifyToken нужно использовать через shema, а там они уже будут вызывать сами 
 export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
-  const { setAlert } = useAlert();
 
-  const [createUser, { data: createUserMutationData, loading: createUserLoading, error: createUserError }] = useMutation(CREATE_USER);
-  const [checkUser, { data: checkUserData, loading: checkUserLoading, error: checkUserError }] = useLazyQuery(CHECK_USER);
+  const cookies = new Cookies();
+
+  const { setAlert } = useAlert();
+  const [registerUser, { data: registerUserMutationData, loading: registerUserLoading, error: registerUserError }] = useMutation(REGISTER_USER);
+  const [loginUser, { data: loginUserMutationData, loading: loginUserLoading, error: loginUserError }] = useMutation(LOGIN_USER);
+  const [refreshTokens, { data: refreshTokensMutationData, loading: refreshTokensLoading, error: refreshTokensError }] = useMutation(REFRESH_TOKENS);
+  const [verifyToken, { data: verifyTokenMutationData, loading: verifyTokenLoading, error: verifyTokenError }] = useMutation(VERIFY_TOKEN);
 
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [gmail, setGmail] = useState('');
 
-
-
-
-
-
   const handleSignUp = async () => {
+    if (registerUserLoading) return;
 
     try {
       const validationData = { name, password, gmail };
       const result = await validateSignUpData(validationData);
+      console.log('validation: ')
+      console.log(result)
 
       if (!result.valid) {
         setAlert(`Validation errors: ${result.errors}`, 'error');
       }
-
-
-      const { data } = await checkUser({ variables: { name, gmail } });
       
-      console.log('data: ' + data);
-      console.log(data);
-      
-      if (data.checkUser) {
-        setAlert('User already exists!', 'error');
+      const { data, errors } = await registerUser({ variables: { name, password, gmail } });
+
+      if (errors) {
+        console.error('Error fetching user:', errors);
+        setAlert('Failed to sign up!', 'error');
         return;
       }
-      console.log('go1');
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const encryptedGmail = CryptoJS.AES.encrypt(gmail, secretKey).toString();
-      console.log('go2');
-      const createUserResult = await createUser({ variables: { name, password: hashedPassword, gmail: encryptedGmail } });
-      console.log('go3');
-      if (createUserResult.data.createUser) {
-        console.log('go4');
+
+      console.log('data: ');
+      console.log(data);
+
+      if (data.registerUser) {
+        console.log('Registration successful:', data);
+
+        console.log('accessToken:', data.registerUser.accessToken);
+        console.log('refreshToken:', data.registerUser.refreshToken);
+
+        cookies.set('accessToken', data.registerUser.accessToken, { path: '/', maxAge: 3600 });
+        localStorage.setItem('refreshToken', data.registerUser.refreshToken);
         setAlert('User created successfully!', 'success');
         setName('');
         setPassword('');
@@ -93,50 +118,105 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
 
 
   const handleLogin = async () => {
+    if (loginUserLoading) return;
 
     try {
       const validationData = { name, password, gmail };
-
       const result = await validateLoginData(validationData);
+
+      const accessToken = cookies.get('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
 
       if (!result.valid) {
         setAlert(`Validation errors: ${result.errors}`, 'error');
         return;
       }
 
-      const { data, error } = await checkUser({ variables: { name, password } });
-      console.log('data: ' + data);
-      console.log(data);
-      console.log('error: ' + error);
+      console.log('accessToken login part: ' + accessToken)
+      console.log('refreshToken login part: ' + refreshToken)
 
-      if (error) {
-        console.error('Error fetching user:', error);
-        setAlert('Failed to log in!', 'error');
-        return;
+
+      if (accessToken) {
+        if (await verifyToken({ variables: { token: accessToken, type: TokenType.ACCESS } })) {
+          // Вход в аккаунт
+        } else {
+          // Если `accessToken` недействителен, но есть `refreshToken`
+          if (refreshToken && await verifyToken({ variables: { token: refreshToken, type: TokenType.REFRESH } })) {
+            // Обновление access и refresh токенов
+          } else {
+            // Если `refreshToken` тоже недействителен или отсутствует
+            // Заново вход в аккаунт
+          }
+        }
+      } else if (refreshToken) {
+        // Если отсутствует `accessToken`, но есть `refreshToken`
+        if ( await verifyToken({ variables: { token: refreshToken, type: TokenType.REFRESH } })) {
+          // Обновление access и refresh токенов
+        } else {
+          // Если `refreshToken` недействителен
+          // Заново вход в аккаунт
+        }
+      } else {
+        // Если отсутствуют оба токена
+        // Заново вход в аккаунт
       }
+        
+        
 
-      if (!data || !data.checkUser) {
-        setAlert('User not found!', 'info');
-        return;
-      }
-
-      if (data) {
+      if (accessToken && await verifyToken({ variables: { token: accessToken, type: TokenType.ACCESS } })) {
         setAlert('Login successful!', 'success');
 
-        setName('');
-        setPassword('');
-        setGmail('');
-
       } else {
-        setAlert('Invalid credentials!', 'error');
+
+        if (refreshToken && await verifyToken({ variables: { token: refreshToken, type: TokenType.REFRESH } })) {
+          setAlert('Login successful!', 'success');
+  
+        }
+
+        const { data, errors } = await loginUser({ variables: { name, password } });
+
+        if (errors) {
+          console.error('Error fetching user:', errors);
+          setAlert('Failed to log in!', 'error');
+          return;
+        }
+
+        if (!data || !data.checkUser) {
+          setAlert('User not found!', 'info');
+          return;
+        }
+
+        if (data) {
+
+          if (!refreshToken) {
+            setAlert('No refresh token found!', 'error');
+            return;
+          }
+
+          const newAccessToken = await refreshTokens({variables: { refreshToken } });
+          if (newAccessToken) {
+            cookies.set('accessToken', newAccessToken, { path: '/', maxAge: 3600 });
+            setAlert('Login successful!', 'success');
+
+            setName('');
+            setPassword('');
+            setGmail('');
+            
+          } else {
+            setAlert('Failed to refresh access token!', 'error');
+          }
+
+        } else {
+          setAlert('Invalid credentials!', 'error');
+        }
       }
+
 
     } catch (err) {
       console.error('Error logging in:', err);
       setAlert('Failed to log in!', 'error');
     }
   };
-
 
   return (
     <Box sx={{ width: '100%', height: '100%', padding: '5px 7% 15px' }}>
