@@ -4,12 +4,13 @@ import { Typography, Button } from "@mui/material"
 import { LoginBlock } from "../LoginBlock/LoginBlock";
 import { SignUpBlock } from "../SignUpBlock/SignUpBlock";
 import { AuthType } from "../../../Models/Enums/AuthEnum";
-import { Link } from "react-router-dom"
-import { gql, useMutation } from '@apollo/client';
+import { Link, useNavigate } from "react-router-dom"
+import { gql, useLazyQuery, useMutation } from '@apollo/client';
 import { useState } from "react";
 import { validateSignUpData, validateLoginData } from "../../../common/Validation/validation";
 import { useAlert } from '../../../common/Alerts/AlertContext';
 import Cookies from 'universal-cookie';
+import { SetRefreshTokensFunc } from "../../../common/Token/SetRefreshTokensFunc";
 
 const REGISTER_USER = gql`
   mutation RegisterUser($name: String!, $gmail: String!, $password: String!) {
@@ -21,7 +22,7 @@ const REGISTER_USER = gql`
 `;
 
 const LOGIN_USER = gql`
-  mutation LoginUser($name: String!, $password: String!) {
+  query LoginUser($name: String!, $password: String!) {
     loginUser(name: $name, password: $password) {
       accessToken
       refreshToken
@@ -47,6 +48,12 @@ const VERIFY_TOKEN = gql`
   }
 `;
 
+const CHECK_USER_EXISTENCE = gql`
+  query CheckUserExistence($name: String!, $password: String!) {
+    checkUserExistence(name: $name, password: $password)
+  }
+`;
+
 enum TokenType {
   ACCESS = 'ACCESS',
   REFRESH = 'REFRESH'
@@ -55,20 +62,24 @@ enum TokenType {
 interface AuthFormBlockProps {
   authType: AuthType,
 }
-// !!!! Вместо refreToken, generate..., verifyToken нужно использовать через shema, а там они уже будут вызывать сами 
+
 export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
 
   const cookies = new Cookies();
+  const navigate = useNavigate();
 
   const { setAlert } = useAlert();
   const [registerUser, { data: registerUserMutationData, loading: registerUserLoading, error: registerUserError }] = useMutation(REGISTER_USER);
-  const [loginUser, { data: loginUserMutationData, loading: loginUserLoading, error: loginUserError }] = useMutation(LOGIN_USER);
   const [refreshTokens, { data: refreshTokensMutationData, loading: refreshTokensLoading, error: refreshTokensError }] = useMutation(REFRESH_TOKENS);
   const [verifyToken, { data: verifyTokenMutationData, loading: verifyTokenLoading, error: verifyTokenError }] = useMutation(VERIFY_TOKEN);
+  const [loginUser, { data: loginUserMutationData, loading: loginUserLoading, error: loginUserError }] = useLazyQuery(LOGIN_USER);
+  const [checkUserExistence, { data: checkUserData, loading: checkUserLoading, error: checkUserError }] = useLazyQuery(CHECK_USER_EXISTENCE);
 
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [gmail, setGmail] = useState('');
+
+
 
   const handleSignUp = async () => {
     if (registerUserLoading) return;
@@ -82,7 +93,7 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
       if (!result.valid) {
         setAlert(`Validation errors: ${result.errors}`, 'error');
       }
-      
+
       const { data, errors } = await registerUser({ variables: { name, password, gmail } });
 
       if (errors) {
@@ -106,6 +117,7 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
         setName('');
         setPassword('');
         setGmail('');
+        navigate('/ToDoLists')
       } else {
         setAlert('Failed to create user1!', 'error');
       }
@@ -139,77 +151,166 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
       if (accessToken) {
         if (await verifyToken({ variables: { token: accessToken, type: TokenType.ACCESS } })) {
           // Вход в аккаунт
+          setAlert('Login successful!', 'success');
+
+          setName('');
+          setPassword('');
+          setGmail('');
+
+          navigate('/ToDoLists');
+          return;
         } else {
           // Если `accessToken` недействителен, но есть `refreshToken`
           if (refreshToken && await verifyToken({ variables: { token: refreshToken, type: TokenType.REFRESH } })) {
             // Обновление access и refresh токенов
+            try {
+              const { data } = await refreshTokens({ variables: { refreshToken } });
+
+              if (data && data.refreshTokens) {
+                const result = await SetRefreshTokensFunc({
+                  accessToken: data.refreshTokens.accessToken,
+                  refreshToken: data.refreshTokens.refreshToken
+                });
+
+                if (result.success) {
+                  setAlert(result.message, 'success');
+                  navigate('/ToDoLists');
+                } else {
+                  setAlert(result.message, 'error');
+                }
+              } else {
+                setAlert('Error fetching new tokens!', 'error');
+              }
+
+            } catch (error) {
+              console.error('Error refreshing tokens:', error);
+              setAlert('Error refreshing tokens!', 'error');
+            }
           } else {
             // Если `refreshToken` тоже недействителен или отсутствует
             // Заново вход в аккаунт
+            setAlert('To continue using your account, you need to log in again!1', 'info');
           }
         }
       } else if (refreshToken) {
         // Если отсутствует `accessToken`, но есть `refreshToken`
-        if ( await verifyToken({ variables: { token: refreshToken, type: TokenType.REFRESH } })) {
+        if (await verifyToken({ variables: { token: refreshToken, type: TokenType.REFRESH } })) {
           // Обновление access и refresh токенов
+          try {
+            const { data } = await refreshTokens({ variables: { refreshToken } });
+            if (data && data.refreshTokens) {
+              const result = await SetRefreshTokensFunc({
+                accessToken: data.refreshTokens.accessToken,
+                refreshToken: data.refreshTokens.refreshToken
+              });
+
+              if (result.success) {
+                setAlert(result.message, 'success');
+                navigate('/ToDoLists');
+              } else {
+                setAlert(result.message, 'error');
+              }
+            } else {
+              setAlert('Error fetching new tokens!', 'error');
+            }
+
+          } catch (error) {
+            console.error('Error refreshing tokens:', error);
+            setAlert('Error refreshing tokens!', 'error');
+          }
         } else {
           // Если `refreshToken` недействителен
           // Заново вход в аккаунт
+          setAlert('To continue using your account, you need to log in again!2', 'info');
         }
       } else {
         // Если отсутствуют оба токена
         // Заново вход в аккаунт
-      }
-        
-        
-
-      if (accessToken && await verifyToken({ variables: { token: accessToken, type: TokenType.ACCESS } })) {
-        setAlert('Login successful!', 'success');
-
-      } else {
-
-        if (refreshToken && await verifyToken({ variables: { token: refreshToken, type: TokenType.REFRESH } })) {
-          setAlert('Login successful!', 'success');
-  
-        }
-
-        const { data, errors } = await loginUser({ variables: { name, password } });
-
-        if (errors) {
-          console.error('Error fetching user:', errors);
-          setAlert('Failed to log in!', 'error');
-          return;
-        }
-
-        if (!data || !data.checkUser) {
-          setAlert('User not found!', 'info');
-          return;
-        }
-
+        //SELECT.....
+        console.log('checkUserExistence go1');
+        console.log('checkUserExistence name: ' + name);
+        console.log('checkUserExistence password: ' + password);
+        const { data } = await checkUserExistence({ variables: { name, password } });
+        console.log(data);
         if (data) {
+          console.log('checkUserExistence go2');
+          if (data.checkUserExistence) {  // Используем само значение, так как оно уже является булевым
+            console.log('checkUserExistence go3');
+            const { data } = await loginUser({ variables: { name, password } });
+            if (data  && data.loginUser) {
+              const result = await SetRefreshTokensFunc({
+                accessToken: data.loginUser.accessToken,
+                refreshToken: data.loginUser.refreshToken
+              });
 
-          if (!refreshToken) {
-            setAlert('No refresh token found!', 'error');
-            return;
-          }
-
-          const newAccessToken = await refreshTokens({variables: { refreshToken } });
-          if (newAccessToken) {
-            cookies.set('accessToken', newAccessToken, { path: '/', maxAge: 3600 });
-            setAlert('Login successful!', 'success');
-
-            setName('');
-            setPassword('');
-            setGmail('');
-            
+              if (result.success) {
+                setAlert(result.message, 'success');
+                navigate('/ToDoLists');
+              } else {
+                setAlert(result.message, 'error');
+              }
+            } else {
+              setAlert('Invalid credentials!', 'error');
+            }
           } else {
-            setAlert('Failed to refresh access token!', 'error');
+            setAlert('User not found. Please sign up.', 'info');
+            navigate('/SignUp');
           }
-
         } else {
-          setAlert('Invalid credentials!', 'error');
+          // Обработка случая, когда запрос не вернул данных или произошла ошибка
+          setAlert('Error checking user existence!', 'error');
         }
       }
+
+
+
+      // if (accessToken && await verifyToken({ variables: { token: accessToken, type: TokenType.ACCESS } })) {
+      //   setAlert('Login successful!', 'success');
+
+      // } else {
+
+      //   if (refreshToken && await verifyToken({ variables: { token: refreshToken, type: TokenType.REFRESH } })) {
+      //     setAlert('Login successful!', 'success');
+
+      //   }
+
+      //   const { data, errors } = await loginUser({ variables: { name, password } });
+
+      //   if (errors) {
+      //     console.error('Error fetching user:', errors);
+      //     setAlert('Failed to log in!', 'error');
+      //     return;
+      //   }
+
+      //   if (!data || !data.checkUser) {
+      //     setAlert('User not found!', 'info');
+      //     return;
+      //   }
+
+      //   if (data) {
+
+      //     if (!refreshToken) {
+      //       setAlert('No refresh token found!', 'error');
+      //       return;
+      //     }
+
+      //     const newAccessToken = await refreshTokens({ variables: { refreshToken } });
+      //     if (newAccessToken) {
+      //       cookies.set('accessToken', newAccessToken, { path: '/', maxAge: 3600 });
+      //       setAlert('Login successful!', 'success');
+
+      //       setName('');
+      //       setPassword('');
+      //       setGmail('');
+
+      //     } else {
+      //       setAlert('Failed to refresh access token!', 'error');
+      //     }
+
+      //   } else {
+      //     setAlert('Invalid credentials!', 'error');
+      //   }
+      // }
 
 
     } catch (err) {

@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import ToDoLists from './components/To-do-Lists/TodoUnitedBlock';
 import Profile from './components/Profile/ProfileUnitedBlock';
 import { Login } from './components/Login/Login';
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { LinearProgress } from '@mui/material';
 import Archive from './components/Archive/Archive';
 import Notification from './components/Notification/Notification';
@@ -12,7 +12,6 @@ import { AlertProvider } from './common/Alerts/AlertContext';
 function App() {
 
   return (
-    <Router>
       <AlertProvider>
         <Box className="App" sx={{ position: 'relative' }}>
           <Routes>
@@ -28,7 +27,6 @@ function App() {
           {false && <LinearProgress variant="determinate" value={20} sx={{ position: 'absolute', zIndex: 1, top: 0, right: 0, left: 0, height: '3px' }} />}
         </Box>
       </AlertProvider>
-    </Router>
   );
 }
 

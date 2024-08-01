@@ -25,7 +25,7 @@ export async function login(req: Request, res: Response) {
 
     return res.json({ accessToken, refreshToken });
   } catch (error) {
-    console.error('Error logging in:', error);
+    console.error('Error logging in1:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 }

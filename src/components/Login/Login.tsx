@@ -3,77 +3,134 @@ import { ParticleComponent } from "./Particles/particle"
 import { AuthFormBlock } from "./AuthFormBlock/AuthFormBlock"
 import { AuthType } from "../../Models/Enums/AuthEnum"
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Cookies from 'universal-cookie';
-import { RefreshTokens } from "../../server/Routes/refreshRoute";
-import { verifyToken } from "../../common/Token/Token";
+import { gql, useMutation } from "@apollo/client";
+import { SetRefreshTokensFunc } from "../../common/Token/SetRefreshTokensFunc";
+
+const REFRESH_TOKENS = gql`
+  mutation RefreshTokens($refreshToken: String!) {
+    refreshTokens(refreshToken: $refreshToken) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+
+const VERIFY_TOKEN = gql`
+  mutation VerifyToken($token: String!, $type: TokenType!) {
+    verifyToken(token: $token, type: $type) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+
+enum TokenType {
+  ACCESS = 'ACCESS',
+  REFRESH = 'REFRESH'
+}
+
+
+const useAuth = () => {
+  const cookies = new Cookies();
+  const navigate = useNavigate();
+  const [checked, setChecked] = useState(false); // Добавляем состояние для отслеживания проверки
+
+  const [refreshTokens] = useMutation(REFRESH_TOKENS);
+  const [verifyToken] = useMutation(VERIFY_TOKEN);
+
+
+
+  const handleTokenRefresh = useCallback(async (refreshToken: string) => {
+    try {
+      const { data } = await refreshTokens({ variables: { refreshToken } });
+
+      if (data && data.refreshTokens) {
+        const result = await SetRefreshTokensFunc({
+          accessToken: data.refreshTokens.accessToken,
+          refreshToken: data.refreshTokens.refreshToken
+        });
+
+        if (result.success) {
+          navigate('/ToDoLists');
+        } else {
+          console.log(result.message);
+        }
+      } else {
+        console.error('Error fetching new tokens!');
+      }
+
+    } catch (error) {
+      console.error('Error refreshing tokens:', error); // при входе в акк на todolist и пользователь пытается перейти на login/signup то срабатывает это
+      cookies.remove('accessToken', { path: '/' });
+      localStorage.removeItem('refreshToken');
+      navigate('/');
+    } finally {
+      setChecked(true);
+    }
+  }, [cookies, navigate, refreshTokens]);
+
+
+
+  const checkTokens = useCallback(async () => {
+    const accessToken = cookies.get('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    if (accessToken) {
+      try {
+        const { data } = await verifyToken({ variables: { token: accessToken, type: TokenType.ACCESS } });
+        if (data?.verifyToken) {
+          navigate('/ToDoLists');
+        } else if (refreshToken) {
+          await handleTokenRefresh(refreshToken);
+        } else {
+          navigate('/');
+        }
+      } catch (error) {
+        console.error('Error verifying access token:', error);
+        if (refreshToken) {
+          await handleTokenRefresh(refreshToken);
+        } else {
+          navigate('/');
+        }
+      } finally {
+        setChecked(true); // Проверка завершена
+      }
+    } else if (refreshToken) {
+      await handleTokenRefresh(refreshToken);
+    } else {
+      navigate('/');
+      setChecked(true);
+    }
+  }, [cookies, handleTokenRefresh, navigate, verifyToken]);
+
+  return { checkTokens, checked };
+};
 
 export const Login = () => {
-    
-    const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET
-    const REFRESH_TOKEN_SECRET = process.env.REACT_APP_REFRESH_TOKEN_SECRET
-    
-    const location = useLocation();
-    const navigate = useNavigate();
-    
-    const authType = location.pathname === "/SignUp" ? AuthType.SignUp : AuthType.Login;
-    
-    useEffect(() => {
-        const cookies = new Cookies();
+  const { checkTokens, checked } = useAuth();
+  const location = useLocation();
+  const authType = location.pathname === "/SignUp" ? AuthType.SignUp : AuthType.Login;
 
-        const checkTokens = async () => {
-            if (!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
-                console.log('Token secrets are not defined');
-                return;
-            }
+  useEffect(() => {
+    if (!checked) {
+      checkTokens();
+    }
+  }, [checkTokens, checked]);
 
-            const accessToken = localStorage.getItem('accessToken');
-            const refreshToken = cookies.get('refreshToken');
-
-            if (accessToken && refreshToken) { //перекидывает на главную страницу (todolist а не login) уже человека который вошел в свой акк
-                const accessTokenValid = verifyToken(accessToken, ACCESS_TOKEN_SECRET);
-
-                if (accessTokenValid) {
-                    const refreshTokenValid = verifyToken(refreshToken, REFRESH_TOKEN_SECRET);
-
-                    if (refreshTokenValid) {
-                        navigate('/todolist');
-                        return;
-                    } else { //если не активен refresh / обновить его и перекинуть пользователья на todolist
-                        try{
-                            await RefreshTokens(refreshToken);
-                            navigate('/todolist');
-                        }catch{
-                            console.error('Error with token update');
-                        }
-                            
-                    }
-
-                } else { // access уже не активен то нужно проверить refresh / обновить аксес и рефреш / потом перекиныть на todolist
-                    try{
-                        await RefreshTokens(refreshToken);
-                        navigate('/todolist');
-                    }catch{
-                        console.error('Error with token update');
-                    }
-                }
-            }
-        }
-        checkTokens();
-    }, [ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, navigate]);
-
-    return (
-        <Box>
-            <Box sx={{ height: '100vh', display: 'flex' }}>
-                <Box sx={{ width: '60%', height: '99%' }}>
-                    <ParticleComponent />
-                </Box>
-                <Box sx={{ width: '40%', backgroundColor: '#D9D9D9', display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: '150px' }}>
-                    <Box sx={{ width: '70%', height: authType === AuthType.SignUp ? '55%' : '48%', backgroundColor: '#FFFFFF', borderRadius: '32px' }}>
-                        <AuthFormBlock authType={authType} />
-                    </Box>
-                </Box>
-            </Box>
+  return (
+    <Box>
+      <Box sx={{ height: '100vh', display: 'flex' }}>
+        <Box sx={{ width: '60%', height: '99%' }}>
+          <ParticleComponent />
         </Box>
-    )
+        <Box sx={{ width: '40%', backgroundColor: '#D9D9D9', display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: '150px' }}>
+          <Box sx={{ width: '70%', height: authType === AuthType.SignUp ? '55%' : '48%', backgroundColor: '#FFFFFF', borderRadius: '32px' }}>
+            <AuthFormBlock authType={authType} />
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  )
 }

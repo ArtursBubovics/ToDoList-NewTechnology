@@ -94,27 +94,24 @@ const resolvers = {
     },
 
     // Можно оставить для отправки другим людям данных
-    checkUser: async (_: any, { name, gmail, password }: { name: string, gmail?: string, password?: string }) => {
+    checkUserExistence: async (_: any, { name, password }: { name: string, password: string }) => {
 
-      if (!gmail && !password) {
-        throw new Error('Either gmail or password must be provided.');
+      console.error('shema checkUser go1')
+      console.error('shema checkUser password' + password)
+
+      if (!password) {
+        throw new Error('Either password must be provided.');
       }
 
       try {
-        const result = await db.query('SELECT "UserID" as id, gmail, password FROM "User" WHERE name = $1', [name]);
+        console.error('shema checkUser go2')
+        const result = await db.query('SELECT "UserID" as id, password FROM "User" WHERE name = $1', [name]);
+        console.error('shema checkUser result: ' + result)
 
         if (result.rows.length > 0) {
-
-          if (gmail) {
-            const encryptedGmail = result.rows[0].gmail;
-            const decryptedGmail = CryptoJS.AES.decrypt(encryptedGmail, SECRET_KEY).toString(CryptoJS.enc.Utf8);
-            return decryptedGmail === gmail;
-          }
-
-          if (password) {
-            const encryptedPassword = result.rows[0].password;
-            return await bcrypt.compare(password, encryptedPassword);
-          }
+          console.error('shema checkUser go3')
+          const encryptedPassword = result.rows[0].password;
+          return await bcrypt.compare(password, encryptedPassword);
 
         } else {
           return false;
@@ -186,7 +183,7 @@ const resolvers = {
 
       return { accessToken, refreshToken };
     },
-    
+
     refreshTokens: async (_: any, { refreshToken }: { refreshToken: string }) => {
       const tokens = await refreshTokens(refreshToken);
       if (!tokens) {

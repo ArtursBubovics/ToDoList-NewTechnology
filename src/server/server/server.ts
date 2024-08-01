@@ -28,7 +28,7 @@ app.use(verifyTokenMiddleware);
 const typeDefs = gql`
 
   type Query {
-    checkUser(name: String!, gmail: String, password: String): Boolean
+    checkUserExistence(name: String!, password: String!): Boolean
     isProtectedQuery: Boolean
     loginUser(name: String!, password: String!): Token
     verifyToken(token: String!, type: TokenType!): TokenStatus
@@ -51,7 +51,6 @@ const typeDefs = gql`
 
   type Mutation {
     registerUser(name: String!, gmail: String!, password: String!): Token
-    loginUser(gmail: String!, password: String!): Token
     refreshTokens(refreshToken: String!): Token
   }
 
