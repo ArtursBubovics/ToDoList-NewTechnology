@@ -40,7 +40,7 @@ const REFRESH_TOKENS = gql`
 `;
 
 const VERIFY_TOKEN = gql`
-  mutation VerifyToken($token: String!, $type: TokenType!) {
+  query VerifyToken($token: String!, $type: TokenType!) {
     verifyToken(token: $token, type: $type) {
       accessToken
       refreshToken
@@ -71,7 +71,7 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
   const { setAlert } = useAlert();
   const [registerUser, { data: registerUserMutationData, loading: registerUserLoading, error: registerUserError }] = useMutation(REGISTER_USER);
   const [refreshTokens, { data: refreshTokensMutationData, loading: refreshTokensLoading, error: refreshTokensError }] = useMutation(REFRESH_TOKENS);
-  const [verifyToken, { data: verifyTokenMutationData, loading: verifyTokenLoading, error: verifyTokenError }] = useMutation(VERIFY_TOKEN);
+  const [verifyToken, { data: verifyTokenMutationData, loading: verifyTokenLoading, error: verifyTokenError }] = useLazyQuery(VERIFY_TOKEN);
   const [loginUser, { data: loginUserMutationData, loading: loginUserLoading, error: loginUserError }] = useLazyQuery(LOGIN_USER);
   const [checkUserExistence, { data: checkUserData, loading: checkUserLoading, error: checkUserError }] = useLazyQuery(CHECK_USER_EXISTENCE);
 

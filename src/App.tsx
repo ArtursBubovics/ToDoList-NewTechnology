@@ -8,6 +8,7 @@ import { LinearProgress } from '@mui/material';
 import Archive from './components/Archive/Archive';
 import Notification from './components/Notification/Notification';
 import { AlertProvider } from './common/Alerts/AlertContext';
+import { PrivateRoute, PublicRoute } from './RouteСontroller';
 
 function App() {
 
@@ -15,10 +16,10 @@ function App() {
       <AlertProvider>
         <Box className="App" sx={{ position: 'relative' }}>
           <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/SignUp" element={<Login />} />
-            <Route path="/ToDoLists" element={<ToDoLists />} />
-            <Route path="/Profile" element={<Profile />} />
+            <Route path="/" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/SignUp" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/ToDoLists"  element={<PrivateRoute><ToDoLists /></PrivateRoute>} />
+            <Route path="/Profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
           </Routes>
 
           <Archive />

@@ -5,7 +5,7 @@ import { AuthType } from "../../Models/Enums/AuthEnum"
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import Cookies from 'universal-cookie';
-import { gql, useMutation } from "@apollo/client";
+import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { SetRefreshTokensFunc } from "../../common/Token/SetRefreshTokensFunc";
 
 const REFRESH_TOKENS = gql`
@@ -18,7 +18,7 @@ const REFRESH_TOKENS = gql`
 `;
 
 const VERIFY_TOKEN = gql`
-  mutation VerifyToken($token: String!, $type: TokenType!) {
+  query VerifyToken($token: String!, $type: TokenType!) {
     verifyToken(token: $token, type: $type) {
       accessToken
       refreshToken
@@ -38,7 +38,7 @@ const useAuth = () => {
   const [checked, setChecked] = useState(false); // Добавляем состояние для отслеживания проверки
 
   const [refreshTokens] = useMutation(REFRESH_TOKENS);
-  const [verifyToken] = useMutation(VERIFY_TOKEN);
+  const [verifyToken] = useLazyQuery(VERIFY_TOKEN);
 
 
 
