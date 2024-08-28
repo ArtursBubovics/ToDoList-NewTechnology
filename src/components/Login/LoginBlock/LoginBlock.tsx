@@ -33,8 +33,9 @@ const LoginBlock: React.FC<LoginBlockProps> = ({ name, setName, password, setPas
                     label='Name'
                     variant='outlined'
                     size='medium'
+                    name="username"
+                    autoComplete="username"
                 />
-
 
                 <FormControl sx={{
                     m: 1, width: '100%', margin: '0px',
@@ -65,6 +66,8 @@ const LoginBlock: React.FC<LoginBlockProps> = ({ name, setName, password, setPas
                             </InputAdornment>
                         }
                         label="Password"
+                        name="password"  // Уникальное значение для идентификации
+                        autoComplete="current-password"
                     />
                 </FormControl>
             </Box>

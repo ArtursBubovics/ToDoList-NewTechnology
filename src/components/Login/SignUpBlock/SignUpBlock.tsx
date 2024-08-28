@@ -35,6 +35,8 @@ const SignUpBlock: React.FC<SignUpBlockProps> = ({ name, setName, password, setP
                 label='Name'
                 variant='outlined'
                 size='medium'
+                name="username"
+                autoComplete="username"
             />
 
             <CustomTextField
@@ -45,6 +47,8 @@ const SignUpBlock: React.FC<SignUpBlockProps> = ({ name, setName, password, setP
                 label='Gmail'
                 variant='outlined'
                 size='medium'
+                name="email"
+                autoComplete="email"
             />
 
             <FormControl sx={{
@@ -76,6 +80,8 @@ const SignUpBlock: React.FC<SignUpBlockProps> = ({ name, setName, password, setP
                         </InputAdornment>
                     }
                     label="Password"
+                    name="password"
+                    autoComplete="new-password"
                 />
             </FormControl>
         </Box>
