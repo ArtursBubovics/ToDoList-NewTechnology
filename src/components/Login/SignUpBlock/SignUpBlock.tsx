@@ -3,7 +3,7 @@ import { FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton } fr
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useState } from "react";
-import { CustomTextField } from "../../../common/InputFields/CustomTextField";
+import CustomTextField from "../../../common/InputFields/CustomTextField";
 
 interface SignUpBlockProps {
     name: string;
@@ -14,7 +14,7 @@ interface SignUpBlockProps {
     setGmail: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const SignUpBlock: React.FC<SignUpBlockProps> = ({ name, setName, password, setPassword, gmail, setGmail }) => {
+const SignUpBlock: React.FC<SignUpBlockProps> = ({ name, setName, password, setPassword, gmail, setGmail }) => {
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -81,3 +81,5 @@ export const SignUpBlock: React.FC<SignUpBlockProps> = ({ name, setName, passwor
         </Box>
     )
 }
+
+export default SignUpBlock;

@@ -1,16 +1,16 @@
 import Box from "@mui/material/Box"
-import { IconBlock } from "../IconsBlocks/IconBlock"
+import IconBlock from "../IconsBlocks/IconBlock"
 import { Typography, Button } from "@mui/material"
-import { LoginBlock } from "../LoginBlock/LoginBlock";
-import { SignUpBlock } from "../SignUpBlock/SignUpBlock";
-import { AuthType } from "../../../Models/Enums/AuthEnum";
+import LoginBlock from "../LoginBlock/LoginBlock";
+import SignUpBlock from "../SignUpBlock/SignUpBlock";
+import AuthType from "../../../Models/Enums/AuthEnum";
 import { Link, useNavigate } from "react-router-dom"
 import { gql, useLazyQuery, useMutation } from '@apollo/client';
 import { useState } from "react";
 import { validateSignUpData, validateLoginData } from "../../../common/Validation/validation";
 import { useAlert } from '../../../common/Alerts/AlertContext';
 import Cookies from 'universal-cookie';
-import { SetRefreshTokensFunc } from "../../../common/Token/SetRefreshTokensFunc";
+import SetRefreshTokensFunc from "../../../common/Token/SetRefreshTokensFunc";
 
 const REGISTER_USER = gql`
   mutation RegisterUser($name: String!, $gmail: String!, $password: String!) {
@@ -42,8 +42,9 @@ const REFRESH_TOKENS = gql`
 const VERIFY_TOKEN = gql`
   query VerifyToken($token: String!, $type: TokenType!) {
     verifyToken(token: $token, type: $type) {
-      accessToken
-      refreshToken
+      valid
+      message
+      data
     }
   }
 `;
@@ -63,17 +64,17 @@ interface AuthFormBlockProps {
   authType: AuthType,
 }
 
-export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
+const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
 
   const cookies = new Cookies();
   const navigate = useNavigate();
 
   const { setAlert } = useAlert();
-  const [registerUser, { data: registerUserMutationData, loading: registerUserLoading, error: registerUserError }] = useMutation(REGISTER_USER);
-  const [refreshTokens, { data: refreshTokensMutationData, loading: refreshTokensLoading, error: refreshTokensError }] = useMutation(REFRESH_TOKENS);
-  const [verifyToken, { data: verifyTokenMutationData, loading: verifyTokenLoading, error: verifyTokenError }] = useLazyQuery(VERIFY_TOKEN);
-  const [loginUser, { data: loginUserMutationData, loading: loginUserLoading, error: loginUserError }] = useLazyQuery(LOGIN_USER);
-  const [checkUserExistence, { data: checkUserData, loading: checkUserLoading, error: checkUserError }] = useLazyQuery(CHECK_USER_EXISTENCE);
+  const [registerUser, { loading: registerUserLoading }] = useMutation(REGISTER_USER);
+  const [refreshTokens] = useMutation(REFRESH_TOKENS);
+  const [verifyToken] = useLazyQuery(VERIFY_TOKEN);
+  const [loginUser, { loading: loginUserLoading }] = useLazyQuery(LOGIN_USER);
+  const [checkUserExistence] = useLazyQuery(CHECK_USER_EXISTENCE);
 
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -108,8 +109,8 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
       if (data.registerUser) {
         console.log('Registration successful:', data);
 
-        console.log('accessToken:', data.registerUser.accessToken);
-        console.log('refreshToken:', data.registerUser.refreshToken);
+        //console.log('accessToken:', data.registerUser.accessToken);
+        //console.log('refreshToken:', data.registerUser.refreshToken);
 
         cookies.set('accessToken', data.registerUser.accessToken, { path: '/', maxAge: 3600 });
         localStorage.setItem('refreshToken', data.registerUser.refreshToken);
@@ -144,12 +145,15 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
         return;
       }
 
-      console.log('accessToken login part: ' + accessToken)
-      console.log('refreshToken login part: ' + refreshToken)
+      //console.log('accessToken login part: ' + accessToken)
+      //console.log('refreshToken login part: ' + refreshToken)
 
 
       if (accessToken) {
-        if (await verifyToken({ variables: { token: accessToken, type: TokenType.ACCESS } })) {
+        const { data } = await verifyToken({ variables: { token: accessToken, type: TokenType.ACCESS } })
+        //console.log('153 line verifyToken accessToken  authFotmBlock data: ')
+        //console.log(data)
+        if (data && data.verifyToken && data.verifyToken.valid) {
           // Вход в аккаунт
           setAlert('Login successful!', 'success');
 
@@ -161,7 +165,10 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
           return;
         } else {
           // Если `accessToken` недействителен, но есть `refreshToken`
-          if (refreshToken && await verifyToken({ variables: { token: refreshToken, type: TokenType.REFRESH } })) {
+          const { data } = await verifyToken({ variables: { token: refreshToken, type: TokenType.REFRESH } })
+          //console.log('202 line verifyToken refreshToken  authFotmBlock data: ')
+          //console.log(data)
+          if (refreshToken && data && data.verifyToken && data.verifyToken.valid) {
             // Обновление access и refresh токенов
             try {
               const { data } = await refreshTokens({ variables: { refreshToken } });
@@ -194,7 +201,10 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
         }
       } else if (refreshToken) {
         // Если отсутствует `accessToken`, но есть `refreshToken`
-        if (await verifyToken({ variables: { token: refreshToken, type: TokenType.REFRESH } })) {
+        const { data } = await verifyToken({ variables: { token: refreshToken, type: TokenType.REFRESH } })
+        //console.log('202 line verifyToken refreshToken  authFotmBlock data: ')
+        //console.log(data)
+        if (data && data.verifyToken && data.verifyToken.valid) {
           // Обновление access и refresh токенов
           try {
             const { data } = await refreshTokens({ variables: { refreshToken } });
@@ -227,23 +237,52 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
         // Если отсутствуют оба токена
         // Заново вход в аккаунт
         //SELECT.....
-        console.log('checkUserExistence go1');
-        console.log('checkUserExistence name: ' + name);
-        console.log('checkUserExistence password: ' + password);
+
+        //console.log('checkUserExistence go1');
+        //console.log('checkUserExistence name: ' + name);
+        //console.log('checkUserExistence password: ' + password);
         const { data } = await checkUserExistence({ variables: { name, password } });
-        console.log(data);
+        //console.log(data);
         if (data) {
-          console.log('checkUserExistence go2');
+          //console.log('checkUserExistence go2');
           if (data.checkUserExistence) {  // Используем само значение, так как оно уже является булевым
-            console.log('checkUserExistence go3');
+            //console.log('checkUserExistence go3');
             const { data } = await loginUser({ variables: { name, password } });
-            if (data  && data.loginUser) {
+            //console.log('data loginUser go4:');
+            //console.log(data);
+            if (data && data.loginUser) {
               const result = await SetRefreshTokensFunc({
                 accessToken: data.loginUser.accessToken,
                 refreshToken: data.loginUser.refreshToken
               });
 
+              //console.log('result go5 result: ');
+              //console.log(result);
+
+              //console.log('result go6 accessToken: ');
+              //console.log(cookies.get('accessToken'));
+
+              //console.log('result go7 refreshToken: ');
+              //console.log(localStorage.getItem('refreshToken'));
+
+              //console.log('result  data.loginUser.accessToken: ');
+              //console.log( data.loginUser.accessToken);
+              //const { data: TEST1verifyToken } = await verifyToken({ variables: { token: data.loginUser.accessToken, type: TokenType.ACCESS } })
+              //console.log('268 line verifyToken accessToken  authFotmBlock data: ')
+              //console.log(TEST1verifyToken)
+              //if (TEST1verifyToken && TEST1verifyToken.verifyToken && TEST1verifyToken.verifyToken.valid) {
+              //  console.log('result TEST1verifyToken valid!!!!!: ');
+              //}
+
+              //const { data: TEST2verifyToken } = await verifyToken({ variables: { token: data.loginUser.refreshToken, type: TokenType.REFRESH } })
+              //console.log('275 line verifyToken refreshToken  authFotmBlock data: ')
+              //console.log(TEST2verifyToken)
+              //if (TEST2verifyToken && TEST2verifyToken.verifyToken && TEST2verifyToken.verifyToken.valid) {
+               // console.log('result TEST2verifyToken valid!!!!!: ');
+              //}
+
               if (result.success) {
+
                 setAlert(result.message, 'success');
                 navigate('/ToDoLists');
               } else {
@@ -390,3 +429,5 @@ export const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
     </Box>
   )
 }
+
+export default AuthFormBlock;

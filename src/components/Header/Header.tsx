@@ -8,7 +8,7 @@ import { Button, FormControlLabel, IconButton, Menu, MenuItem, Typography } from
 import Tooltip from '@mui/material/Tooltip';
 import HeaderIcons from './HeaderIcons/HeaderIcons';
 import DayNightSwith from '../../common/DayNightSwith';
-import { HeaderContentProps } from '../../Models/Interfaces/IHeaderContentProps';
+import HeaderContentProps from '../../Models/Interfaces/IHeaderContentProps';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { setArchiveValue, setNotficationOpenValue } from '../../ReduxToolkit/Reducers/headerMenu-reducer';

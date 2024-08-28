@@ -1,11 +1,11 @@
 import { Box, Drawer, Typography, Divider } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import { setNotficationOpenValue } from '../../ReduxToolkit/Reducers/headerMenu-reducer';
-import { IHeaderMenuState } from "../../Models/Interfaces/IHeaderMenuState";
+import IHeaderMenuState from "../../Models/Interfaces/IHeaderMenuState";
 
-import { IconsButtons } from "../../common/Buttons/IconsButtons/IconsButtons";
+import IconsButtons from "../../common/Buttons/IconsButtons/IconsButtons";
 import CloseIcon from '@mui/icons-material/Close';
-import { NotificationFieldsBlock } from "./NotificationFieldsBlock/NotificationFieldsBlock";
+import NotificationFieldsBlock from "./NotificationFieldsBlock/NotificationFieldsBlock";
 
 interface NotificationProps {
     isNew: boolean;

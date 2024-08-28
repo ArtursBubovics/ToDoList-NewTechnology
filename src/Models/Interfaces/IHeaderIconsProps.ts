@@ -1,6 +1,6 @@
 import { SvgIconProps } from '@mui/material/SvgIcon';
 
-export interface IHeaderIconsProps {
+interface IHeaderIconsProps {
     title: string,
     dotDisposition: {
         top: string,
@@ -9,3 +9,5 @@ export interface IHeaderIconsProps {
     Icon: React.ElementType<SvgIconProps>,
     invisible: boolean;
 }
+
+export default IHeaderIconsProps;

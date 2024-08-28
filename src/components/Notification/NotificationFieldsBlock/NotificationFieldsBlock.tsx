@@ -1,5 +1,5 @@
 import { Box, Typography, Divider } from "@mui/material"
-import { NotificationField } from "./NotificationFields/NotificationField"
+import NotificationField from "./NotificationFields/NotificationField"
 
 interface NotificationProps {
     props: {
@@ -10,7 +10,7 @@ interface NotificationProps {
     }
 }
 
-export const NotificationFieldsBlock: React.FC<NotificationProps> = ({props}) => {
+const NotificationFieldsBlock: React.FC<NotificationProps> = ({props}) => {
     return (
         <Box sx={{ '&:not(:last-child)': { paddingBottom: '20px' } }}>
             <Box sx={{ padding: '0px 0px 10px 25px' }}>
@@ -23,3 +23,5 @@ export const NotificationFieldsBlock: React.FC<NotificationProps> = ({props}) =>
         </Box>
     )
 }
+
+export default NotificationFieldsBlock;

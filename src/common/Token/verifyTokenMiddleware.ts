@@ -19,14 +19,19 @@ declare global {
   }
 }
 
-export const verifyTokenMiddleware = (req: Request, res: Response, next: NextFunction) => {
+enum TokenType {
+  ACCESS = 'ACCESS',
+  REFRESH = 'REFRESH'
+}
 
-  console.log('Incoming request:', {
-    method: req.method,
-    url: req.originalUrl,
-    headers: req.headers,
-    body: req.body
-  });
+const verifyTokenMiddleware = (req: Request, res: Response, next: NextFunction) => {
+
+  // console.log('Incoming request:', {
+  //   method: req.method,
+  //   url: req.originalUrl,
+  //   headers: req.headers,
+  //   body: req.body
+  // });
 
   const excludedOperations = ['RegisterUser', 'LoginUser','VerifyToken', 'RefreshTokens', 'CheckUserExistence'];
 
@@ -44,7 +49,7 @@ export const verifyTokenMiddleware = (req: Request, res: Response, next: NextFun
 
   const token = authHeader.split(' ')[1];
 
-  const decoded = verifyToken(token, ACCESS_TOKEN_SECRET);
+  const decoded = verifyToken(token, TokenType.ACCESS);
 
   if (!decoded) { //доделать // что идет дальше в client.ts
     return res.sendStatus(401); // Unauthorized  
@@ -53,3 +58,5 @@ export const verifyTokenMiddleware = (req: Request, res: Response, next: NextFun
   req.user = decoded as UserPayload;
   next();
 };
+
+export default verifyTokenMiddleware;

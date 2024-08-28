@@ -8,7 +8,7 @@ interface MyComponentProps {
     text: string;
 }
 
-export const NotificationField: React.FC<MyComponentProps> = ({ isNew, title, text }) => {
+const NotificationField: React.FC<MyComponentProps> = ({ isNew, title, text }) => {
 
     const [expanded, setExpanded] = useState<string | false>(false);
 
@@ -38,3 +38,5 @@ export const NotificationField: React.FC<MyComponentProps> = ({ isNew, title, te
         </Accordion>
     )
 }
+
+export default NotificationField;

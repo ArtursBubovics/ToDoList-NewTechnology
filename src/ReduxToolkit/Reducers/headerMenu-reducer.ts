@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { IHeaderMenuState } from '../../Models/Interfaces/IHeaderMenuState';
+import IHeaderMenuState from '../../Models/Interfaces/IHeaderMenuState';
 
 const initialState: IHeaderMenuState = {
     isArchiveOpen: false,

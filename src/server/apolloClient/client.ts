@@ -1,9 +1,9 @@
 import { ApolloClient, InMemoryCache, HttpLink, Observable, gql  } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
-import { from, ApolloLink, FetchResult } from '@apollo/client/link/core';
+import { from, FetchResult } from '@apollo/client/link/core';
 import Cookies from 'universal-cookie';
-import { useNavigate, NavigateFunction  } from 'react-router-dom';
+import { NavigateFunction  } from 'react-router-dom';
 
 const cookies = new Cookies();
 

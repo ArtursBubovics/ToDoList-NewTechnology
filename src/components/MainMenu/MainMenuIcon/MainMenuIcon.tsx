@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { IMainMenuIconProps } from '../../../Models/Interfaces/IMainMenuIconProps';
+import IMainMenuIconProps from '../../../Models/Interfaces/IMainMenuIconProps';
 
 
 

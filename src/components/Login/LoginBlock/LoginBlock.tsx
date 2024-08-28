@@ -3,7 +3,7 @@ import { FormControl, Typography, InputLabel, OutlinedInput, InputAdornment, Ico
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useState } from "react";
-import { CustomTextField } from "../../../common/InputFields/CustomTextField";
+import CustomTextField from "../../../common/InputFields/CustomTextField";
 
 interface LoginBlockProps {
     name: string;
@@ -12,7 +12,7 @@ interface LoginBlockProps {
     setPassword: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const LoginBlock: React.FC<LoginBlockProps> = ({ name, setName, password, setPassword }) => {
+const LoginBlock: React.FC<LoginBlockProps> = ({ name, setName, password, setPassword }) => {
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -87,3 +87,5 @@ export const LoginBlock: React.FC<LoginBlockProps> = ({ name, setName, password,
         </Box>
     )
 }
+
+export default LoginBlock;

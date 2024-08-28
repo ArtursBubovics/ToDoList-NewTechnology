@@ -1,7 +1,7 @@
 // const { makeExecutableSchema } = require('@graphql-tools/schema');
 import { Request } from 'express';
 import cors from 'cors';
-import { verifyTokenMiddleware } from '../../common/Token/verifyTokenMiddleware';
+import verifyTokenMiddleware from '../../common/Token/verifyTokenMiddleware';
 import cookieParser from 'cookie-parser';
 import { GraphQLResponse, GraphQLRequestContext } from 'apollo-server-types';
 //import publicRouter from '../Routes/publicRouter';
@@ -47,6 +47,7 @@ const typeDefs = gql`
   type TokenStatus {
     valid: Boolean!
     message: String
+    data: String
   }
 
   type Mutation {

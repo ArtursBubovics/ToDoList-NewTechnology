@@ -1,7 +1,7 @@
 import { Box,Paper,Typography,Divider } from "@mui/material"
-import { RegularButtons } from "../../../common/Buttons/RegularButtons/RegularButtons"
+import RegularButtons from "../../../common/Buttons/RegularButtons/RegularButtons"
 
-export const ArchiveBlock = ({ text }: { text: string }) => {
+const ArchiveBlock = ({ text }: { text: string }) => {
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
         <Paper sx={{ width: '95%', height: '90%', marginBottom: '15px', marginTop: '5px', padding: '18px 18px 8px', fontSize: '18px' }} elevation={2}>
@@ -22,3 +22,5 @@ export const ArchiveBlock = ({ text }: { text: string }) => {
     </Box>
     )
 }
+
+export default ArchiveBlock;

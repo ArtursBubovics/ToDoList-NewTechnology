@@ -6,7 +6,7 @@ interface RegularButtonsProps extends ButtonProps {
     sx?: SxProps;
 }
 
-export const RegularButtons: React.FC<RegularButtonsProps> = ({ children, sx }) => {
+ const RegularButtons: React.FC<RegularButtonsProps> = ({ children, sx }) => {
 
     return (
         <Button sx={{
@@ -23,3 +23,5 @@ export const RegularButtons: React.FC<RegularButtonsProps> = ({ children, sx }) 
         </Button>
     )
 }
+
+export default RegularButtons;

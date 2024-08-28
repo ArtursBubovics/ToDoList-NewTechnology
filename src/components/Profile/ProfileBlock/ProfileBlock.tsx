@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material"
-import { CustomTextField } from "../../../common/InputFields/CustomTextField"
+import CustomTextField from "../../../common/InputFields/CustomTextField"
 
-export const Profile = () => {
+const Profile = () => {
     return (
         <Box sx={{ width: '100%', height: '90vh', padding: '3% 5%' }}>
             <Box sx={{ width: '100%', height: '35%', display: 'flex', gap: '3%' }}>
@@ -45,3 +45,5 @@ export const Profile = () => {
         </Box>
     )
 }
+
+export default Profile;

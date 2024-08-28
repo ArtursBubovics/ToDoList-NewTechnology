@@ -5,14 +5,14 @@ import Divider from '@mui/material/Divider';
 import { Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { setArchiveValue } from '../../ReduxToolkit/Reducers/headerMenu-reducer';
-import { IHeaderMenuState } from '../../Models/Interfaces/IHeaderMenuState';
+import IHeaderMenuState from '../../Models/Interfaces/IHeaderMenuState';
 import CloseIcon from '@mui/icons-material/Close';
-import { IconsButtons } from '../../common/Buttons/IconsButtons/IconsButtons';
+import IconsButtons from '../../common/Buttons/IconsButtons/IconsButtons';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
-import { RegularButtons } from '../../common/Buttons/RegularButtons/RegularButtons';
-import { ArchiveBlock } from './ArchiveBlock/ArchiveBlock';
+import RegularButtons from '../../common/Buttons/RegularButtons/RegularButtons';
+import ArchiveBlock from './ArchiveBlock/ArchiveBlock';
 //import { useIsOverflow } from './ArchivesSroll/ArchivesSroll';
 
 const Search = styled('div')(({ theme }) => ({

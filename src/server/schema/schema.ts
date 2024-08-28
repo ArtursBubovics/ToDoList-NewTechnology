@@ -6,16 +6,10 @@ import { generateAccessToken, generateRefreshToken, refreshTokens, verifyToken }
 const db = require('../server/db');
 
 const SECRET_KEY = process.env.SECRET_KEY
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
-const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
 
 if (!SECRET_KEY) {
   throw new Error('Secret key is not defined in the environment variables2');
-}
-
-if (!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
-  throw new Error('Token secrets are not defined');
 }
 
 interface Context {
@@ -28,8 +22,8 @@ interface AuthResponse {
 }
 
 enum TokenType {
-  ACCESS,
-  REFRESH
+  ACCESS = 'ACCESS',
+  REFRESH = 'REFRESH'
 }
 
 interface VerifyTokenArgs {
@@ -55,23 +49,28 @@ export function isAuthResponse(data: any): data is AuthResponse {
 const resolvers = {
   Query: {
     loginUser: async (_: any, { name, password }: { name: string, password: string }) => {
-      const userResult = await db.query('SELECT * FROM "User" WHERE name = $1', [name]);
+      try{
+        const userResult = await db.query('SELECT * FROM "User" WHERE name = $1', [name]);
 
-      if (!userResult.rows.length) {
-        throw new Error('Invalid credentials');
+        if (!userResult.rows.length) {
+          throw new Error('Invalid credentials');
+        }
+  
+        const user = userResult.rows[0];
+        const validPassword = await bcrypt.compare(password, user.password);
+  
+        if (!validPassword) {
+          throw new Error('Invalid credentials');
+        }
+  
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
+  
+        return { accessToken, refreshToken };
+      }catch (error) {
+        console.error('Error loginUser:', error);
       }
 
-      const user = userResult.rows[0];
-      const validPassword = await bcrypt.compare(password, user.password);
-
-      if (!validPassword) {
-        throw new Error('Invalid credentials');
-      }
-
-      const accessToken = generateAccessToken(user);
-      const refreshToken = generateRefreshToken(user);
-
-      return { accessToken, refreshToken };
     },
 
     isProtectedQuery: (parent: any, args: any, context: Context) => {
@@ -83,13 +82,16 @@ const resolvers = {
 
     verifyToken: (parent: any, { token, type }: VerifyTokenArgs) => {
       try {
-        if (type === TokenType.ACCESS) {
-          return verifyToken(token, ACCESS_TOKEN_SECRET)
-        } else if (type === TokenType.REFRESH) {
-          return verifyToken(token, REFRESH_TOKEN_SECRET)
+        let result = verifyToken(token, type)
+
+        if (result) {
+          return { valid: true, message: "Token is valid", data: result };
+        } else {
+          return { valid: false, message: "Token is invalid or expired", data: result };
         }
       } catch (error) {
-        return error;
+        console.error('Error verifying token:', error);
+        return { valid: false, message: "Error verifying token", data: null };
       }
     },
 

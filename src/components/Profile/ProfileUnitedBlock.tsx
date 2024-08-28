@@ -2,7 +2,7 @@ import React from 'react';
 
 import Box from '@mui/material/Box';
 import MenuHeaderPageBlock from '../../common/MenuHeaderPageBlock/MenuHeaderPageBlock';
-import { Profile } from './ProfileBlock/ProfileBlock';
+import Profile from './ProfileBlock/ProfileBlock';
 
 const ProfileBlock = () => {
 

@@ -2,7 +2,7 @@ import './App.css';
 import Box from '@mui/material/Box';
 import ToDoLists from './components/To-do-Lists/TodoUnitedBlock';
 import Profile from './components/Profile/ProfileUnitedBlock';
-import { Login } from './components/Login/Login';
+import Login from './components/Login/Login';
 import { Route, Routes } from "react-router-dom";
 import { LinearProgress } from '@mui/material';
 import Archive from './components/Archive/Archive';

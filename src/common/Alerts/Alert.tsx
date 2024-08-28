@@ -5,7 +5,7 @@ interface AlertProps {
     status: 'success' | 'info' | 'warning' | 'error'
   }
 
-export const Alerts: React.FC<AlertProps> = ({message, status}) => {
+const Alerts: React.FC<AlertProps> = ({message, status}) => {
     return (
         <div style={{
             position: 'absolute',
@@ -22,3 +22,5 @@ export const Alerts: React.FC<AlertProps> = ({message, status}) => {
           </div>
     );
 }
+
+export default Alerts;

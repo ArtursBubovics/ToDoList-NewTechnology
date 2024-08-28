@@ -3,7 +3,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 
 import { useSelector } from 'react-redux';
-import { IMenuState } from '../../Models/Interfaces/IMenuState';
+import IMenuState from '../../Models/Interfaces/IMenuState';
 import HeaderContainer from '../../components/Header/HeaderContainer/HeaderContainer';
 import MainMenu from '../../components/MainMenu/MainMenu';
 

@@ -7,6 +7,11 @@ interface User {
   gmail: string;
 }
 
+enum TokenType {
+  ACCESS = 'ACCESS',
+  REFRESH = 'REFRESH'
+}
+
 const ACCESS_TOKEN_SECRET = process.env.REACT_APP_ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REACT_APP_REFRESH_TOKEN_SECRET;
 
@@ -16,23 +21,27 @@ if (!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
 
 // Функция для генерации токена
 export const generateAccessToken = (user: User) => {
-  return jwt.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+  const token = jwt.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+  console.log('Generated Access Token:', token); // Логирование токена
+  return token;
 };
 
 export const generateRefreshToken = (user: User) => {
-  return jwt.sign(user, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+  const token = jwt.sign(user, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+  console.log('Generated Refresh Token:', token); // Логирование токена
+  return token;
 };
 
 export const refreshTokens = async (refreshToken: string): Promise<{ accessToken: string, refreshToken: string } | null> => {
   try {
-    const user = verifyToken(refreshToken, REFRESH_TOKEN_SECRET);
+    const user = verifyToken(refreshToken, TokenType.REFRESH); // ихменить логику //получить ответ работает ли токен, потом получить данные из бд их передать на генерацию
 
     if (!user) {
       throw new Error('Invalid refresh token');
     }
 
-    const newRefreshToken = generateRefreshToken(user);
     const newAccessToken = generateAccessToken(user);
+    const newRefreshToken = generateRefreshToken(user);
 
     return { accessToken: newAccessToken, refreshToken: newRefreshToken };
   } catch (error) {
@@ -42,14 +51,18 @@ export const refreshTokens = async (refreshToken: string): Promise<{ accessToken
 };
 
 // Функция для проверки токена
-export const verifyToken = (token: string, secret: string): User | null => {
-  if (!secret) {
-    throw new Error('Token secret is not defined');
-  }
-
+export const verifyToken = (token: string, type: TokenType): User | null => {
   try {
-    return jwt.verify(token, secret);
+    let decoded;
+    if (type === TokenType.ACCESS) {
+      decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
+    } else if (type === TokenType.REFRESH) {
+      decoded = jwt.verify(token, REFRESH_TOKEN_SECRET);
+    }
+    console.log('Decoded Token:', decoded); // Логирование декодированного токена
+    return decoded as User;
   } catch (error) {
+    console.error('Token verification failed:', error); // Логирование ошибки
     return null;
   }
 };

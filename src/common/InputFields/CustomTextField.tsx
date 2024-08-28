@@ -6,7 +6,7 @@ interface CustomTextFieldProps extends Omit<TextFieldProps, 'value'> {
     value?: string;
 }
 
-export const CustomTextField: React.FC<CustomTextFieldProps> = ({ backgroundColor, noBorder, value, ...props }) => {
+const CustomTextField: React.FC<CustomTextFieldProps> = ({ backgroundColor, noBorder, value, ...props }) => {
     return (
         <TextField
             InputLabelProps={{
@@ -28,3 +28,5 @@ export const CustomTextField: React.FC<CustomTextFieldProps> = ({ backgroundColo
         />
     )
 }
+
+export default CustomTextField;

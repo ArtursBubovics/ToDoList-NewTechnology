@@ -1,5 +1,7 @@
-export interface IMainMenuIconProps {
+interface IMainMenuIconProps {
     imgPath: string;
     text: string;
     isOpen: boolean;
 }
+
+export default IMainMenuIconProps

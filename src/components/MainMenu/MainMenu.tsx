@@ -4,10 +4,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import MainMenuIcon from './MainMenuIcon/MainMenuIcon';
-import { IMenuState } from '../../Models/Interfaces/IMenuState';
+import IMenuState from '../../Models/Interfaces/IMenuState';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMenuSize } from '../../ReduxToolkit/Reducers/menu-reducer';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate  } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 
 const MainMenu = () => {
 
@@ -17,6 +18,8 @@ const MainMenu = () => {
 
     const isOpen = useSelector((state: RootState) => state.menu.isOpen);
     const dispatch = useDispatch();
+    const navigate = useNavigate(); 
+    const cookies = new Cookies();
 
     const [isActiveHoverBtn, setIsActiveHoverBtn] = useState(false);
 
@@ -29,6 +32,12 @@ const MainMenu = () => {
         setTimeout(() => {
             setIsActiveHoverBtn(!isActiveHoverBtn);
         }, 300);
+    };
+
+    const handleLogout = () => {
+        cookies.remove('accessToken', { path: '/' });
+        localStorage.removeItem('refreshToken');
+        navigate('/');
     };
 
     return (
@@ -69,9 +78,9 @@ const MainMenu = () => {
                     <Box sx={{ marginLeft: '20px', marginTop: '10px', marginRight: '40px', borderBottom: '2px solid #EBEBEB', width: '50%' }}></Box>
                 </Box>
                 <Box sx={{ padding: isOpen ? '10% 11% 0% 16%' : '29% 16% 0% 19%' }}>
-                    <Link to='/' style={{ textDecoration: 'none' }}>
+                    <Box onClick={handleLogout} sx={{ cursor: 'pointer', textDecoration: 'none' }}>
                         <MainMenuIcon imgPath="assets/images/LogOutIcon.png" text="Log out" isOpen={isOpen} />
-                    </Link>
+                    </Box>
                 </Box>
             </Box>
             <Box>

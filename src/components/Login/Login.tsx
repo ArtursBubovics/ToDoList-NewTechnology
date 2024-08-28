@@ -1,12 +1,12 @@
 import { Box } from "@mui/material"
 import { ParticleComponent } from "./Particles/particle"
-import { AuthFormBlock } from "./AuthFormBlock/AuthFormBlock"
-import { AuthType } from "../../Models/Enums/AuthEnum"
+import AuthFormBlock from "./AuthFormBlock/AuthFormBlock"
+import AuthType from "../../Models/Enums/AuthEnum"
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import Cookies from 'universal-cookie';
 import { gql, useLazyQuery, useMutation } from "@apollo/client";
-import { SetRefreshTokensFunc } from "../../common/Token/SetRefreshTokensFunc";
+import SetRefreshTokensFunc from "../../common/Token/SetRefreshTokensFunc";
 
 const REFRESH_TOKENS = gql`
   mutation RefreshTokens($refreshToken: String!) {
@@ -20,8 +20,8 @@ const REFRESH_TOKENS = gql`
 const VERIFY_TOKEN = gql`
   query VerifyToken($token: String!, $type: TokenType!) {
     verifyToken(token: $token, type: $type) {
-      accessToken
-      refreshToken
+      valid
+      message
     }
   }
 `;
@@ -80,7 +80,8 @@ const useAuth = () => {
     if (accessToken) {
       try {
         const { data } = await verifyToken({ variables: { token: accessToken, type: TokenType.ACCESS } });
-        if (data?.verifyToken) {
+        console.log('Verification result:', data); // Логирование результата
+        if (data && data.verifyToken && data.verifyToken.valid) {
           navigate('/ToDoLists');
         } else if (refreshToken) {
           await handleTokenRefresh(refreshToken);
@@ -108,7 +109,7 @@ const useAuth = () => {
   return { checkTokens, checked };
 };
 
-export const Login = () => {
+const Login = () => {
   const { checkTokens, checked } = useAuth();
   const location = useLocation();
   const authType = location.pathname === "/SignUp" ? AuthType.SignUp : AuthType.Login;
@@ -134,3 +135,5 @@ export const Login = () => {
     </Box>
   )
 }
+
+export default Login;

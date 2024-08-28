@@ -5,7 +5,7 @@ interface IconsButtonsProps {
 }
 
 
-export const IconsButtons: React.FC<IconsButtonsProps> = ({ Icon }) => {
+ const IconsButtons: React.FC<IconsButtonsProps> = ({ Icon }) => {
     return (
         <Button sx={{
             padding: '0',
@@ -19,3 +19,5 @@ export const IconsButtons: React.FC<IconsButtonsProps> = ({ Icon }) => {
         </Button>
     )
 }
+
+export default IconsButtons;
