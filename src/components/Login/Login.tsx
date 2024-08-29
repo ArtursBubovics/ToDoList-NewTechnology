@@ -9,7 +9,7 @@ import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import SetRefreshTokensFunc from "../../common/Token/SetRefreshTokensFunc";
 
 const REFRESH_TOKENS = gql`
-  mutation RefreshTokens($refreshToken: String!) {
+  query RefreshTokens($refreshToken: String!) {
     refreshTokens(refreshToken: $refreshToken) {
       accessToken
       refreshToken
@@ -37,7 +37,7 @@ const useAuth = () => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false); // Добавляем состояние для отслеживания проверки
 
-  const [refreshTokens] = useMutation(REFRESH_TOKENS);
+  const [refreshTokens] = useLazyQuery(REFRESH_TOKENS);
   const [verifyToken] = useLazyQuery(VERIFY_TOKEN);
 
 

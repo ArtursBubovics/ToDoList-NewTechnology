@@ -122,7 +122,16 @@ const resolvers = {
         console.error('Error checking user:', error);
         return false;
       }
+    },
+    
+    refreshTokens: async (_: any, { refreshToken }: { refreshToken: string }) => {
+      const tokens = await refreshTokens(refreshToken);
+      if (!tokens) {
+        throw new Error('Failed to refresh tokens');
+      }
+      return tokens;
     }
+
   },
   Mutation: {
     registerUser: async (_: any, { name, gmail, password }: { name: string, gmail: string, password: string }) => {
@@ -184,14 +193,6 @@ const resolvers = {
       console.log('registerUser finish');
 
       return { accessToken, refreshToken };
-    },
-
-    refreshTokens: async (_: any, { refreshToken }: { refreshToken: string }) => {
-      const tokens = await refreshTokens(refreshToken);
-      if (!tokens) {
-        throw new Error('Failed to refresh tokens');
-      }
-      return tokens;
     }
   }
 };

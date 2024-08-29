@@ -23,7 +23,7 @@ const authLink = setContext(async (_, { headers }) => {
 });
 
 const REFRESH_TOKENS = gql`
-  mutation RefreshTokens($refreshToken: String!) {
+  query RefreshTokens($refreshToken: String!) {
     refreshTokens(refreshToken: $refreshToken) {
       accessToken
       refreshToken
@@ -53,8 +53,8 @@ const errorLink = (navigate: NavigateFunction) => onError(({ graphQLErrors, oper
             cache: new InMemoryCache(),
           });
 
-          client.mutate({
-            mutation: REFRESH_TOKENS,
+          client.query({
+            query: REFRESH_TOKENS,
             variables: { refreshToken },
           })
             .then(({ data }) => {
