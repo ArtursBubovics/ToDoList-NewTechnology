@@ -32,6 +32,7 @@ const typeDefs = gql`
     isProtectedQuery: Boolean
     loginUser(name: String!, password: String!): Token
     verifyToken(token: String!, type: TokenType!): TokenStatus
+    refreshTokens(refreshToken: String!): Token
   }
 
   type Token {
@@ -52,7 +53,6 @@ const typeDefs = gql`
 
   type Mutation {
     registerUser(name: String!, gmail: String!, password: String!): Token
-    refreshTokens(refreshToken: String!): Token
   }
 
 `;

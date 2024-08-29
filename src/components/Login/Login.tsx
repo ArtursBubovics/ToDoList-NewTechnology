@@ -5,7 +5,7 @@ import AuthType from "../../Models/Enums/AuthEnum"
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import Cookies from 'universal-cookie';
-import { gql, useLazyQuery, useMutation } from "@apollo/client";
+import { gql, useLazyQuery } from "@apollo/client";
 import SetRefreshTokensFunc from "../../common/Token/SetRefreshTokensFunc";
 
 const REFRESH_TOKENS = gql`
