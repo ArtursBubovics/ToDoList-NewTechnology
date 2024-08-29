@@ -51,7 +51,7 @@ const LoginBlock: React.FC<LoginBlockProps> = ({ name, setName, password, setPas
                     <OutlinedInput
                         id="outlined-adornment-password"
                         type={showPassword ? 'text' : 'password'}
-                        value={password}
+                        defaultValue={password}
                         onChange={(e) => setPassword(e.target.value)}
                         endAdornment={
                             <InputAdornment position="end">

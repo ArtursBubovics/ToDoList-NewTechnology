@@ -30,13 +30,13 @@ const SignUpBlock: React.FC<SignUpBlockProps> = ({ name, setName, password, setP
             <CustomTextField
                 backgroundColor='#F9F9F9'
                 noBorder={true}
-                value={name}
+                defaultValue={name}
                 onChange={(e) => setName(e.target.value)}
                 label='Name'
                 variant='outlined'
                 size='medium'
                 name="username"
-                autoComplete="username"
+                autoComplete="new-username"
             />
 
             <CustomTextField
@@ -65,7 +65,7 @@ const SignUpBlock: React.FC<SignUpBlockProps> = ({ name, setName, password, setP
                 <OutlinedInput
                     id="outlined-adornment-password"
                     type={showPassword ? 'text' : 'password'}
-                    value={password}
+                    defaultValue={password}
                     onChange={(e) => setPassword(e.target.value)}
                     endAdornment={
                         <InputAdornment position="end">

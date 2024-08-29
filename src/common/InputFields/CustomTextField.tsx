@@ -23,7 +23,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({ backgroundColor, noBo
                 },
                 ...(noBorder && { "& fieldset": { border: 'none' } })
             }}
-            value={value}
+            defaultValue={value}
             {...props}
         />
     )
