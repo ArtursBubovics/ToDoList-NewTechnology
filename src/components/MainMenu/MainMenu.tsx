@@ -7,7 +7,7 @@ import MainMenuIcon from './MainMenuIcon/MainMenuIcon';
 import IMenuState from '../../Models/Interfaces/IMenuState';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMenuSize } from '../../ReduxToolkit/Reducers/menu-reducer';
-import { Link, useNavigate  } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
 const MainMenu = () => {
@@ -18,7 +18,7 @@ const MainMenu = () => {
 
     const isOpen = useSelector((state: RootState) => state.menu.isOpen);
     const dispatch = useDispatch();
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     const cookies = new Cookies();
 
     const [isActiveHoverBtn, setIsActiveHoverBtn] = useState(false);
@@ -84,17 +84,14 @@ const MainMenu = () => {
                 </Box>
             </Box>
             <Box>
-                {!isOpen && (<Box sx={{ display: 'flex', width: isActiveHoverBtn ? '20px' : '10px', height: '45%', alignItems: 'flex-end' }}>
+                {!isOpen && (<Box sx={{ display: 'flex', width: '20px', height: '45%', alignItems: 'flex-end' }}>
 
-                    {!isActiveHoverBtn && (<Box sx={{ width: '35%', height: '8%', borderRadius: '4px', backgroundColor: '#D9D9D9' }} onMouseEnter={hoverMenuBtn}></Box>)}
-
-                    {isActiveHoverBtn && (
-                        <Box sx={{
-                            width: '75%', height: '8%', borderRadius: '4px', backgroundColor: 'white', border: '1px solid #D9D9D9', display: 'flex', alignItems: 'center',
-                            justifyContent: 'center', cursor: 'pointer'
-                        }} onMouseLeave={hoverMenuBtn} onClick={toggleMenu}>
-                            <img style={{ opacity: 0.5 }} src="assets/images/right_arrow.png" alt="" />
-                        </Box>)}
+                    <Box sx={{
+                        width: '75%', height: '8%', borderRadius: '4px', backgroundColor: 'white', border: '1px solid #D9D9D9', display: 'flex', alignItems: 'center',
+                        justifyContent: 'center', cursor: 'pointer'
+                    }} onMouseLeave={hoverMenuBtn} onClick={toggleMenu}>
+                        <img style={{ opacity: 0.5 }} src="assets/images/right_arrow.png" alt="" />
+                    </Box>
 
                 </Box>)}
             </Box>
