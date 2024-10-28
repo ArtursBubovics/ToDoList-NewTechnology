@@ -4,7 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Avatar from '@mui/material/Avatar';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Button, FormControlLabel, IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { Button, FormControlLabel, IconButton, Menu, MenuItem } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import HeaderIcons from './HeaderIcons/HeaderIcons';
 import DayNightSwith from '../../common/DayNightSwith';
@@ -12,6 +12,8 @@ import HeaderContentProps from '../../Models/Interfaces/IHeaderContentProps';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { setArchiveValue, setNotficationOpenValue } from '../../ReduxToolkit/Reducers/headerMenu-reducer';
+import { useLocation } from 'react-router-dom';
+import DonationButton from './DonationButton/DonationButton';
 
 const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClose }) => {
     const invisible = false;
@@ -26,23 +28,15 @@ const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClo
         dispatch(setNotficationOpenValue(value));
     };
 
+    const location = useLocation();
+    const isUrlProfile = location.pathname ==="/Profile" ? true : false;
+
     return (
         <Box>
             <AppBar position="static" sx={{ backgroundColor: 'transparent', boxShadow: 'none', borderBottom: '2px solid #EEEEEE' }}>
                 <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Box sx={{ display: 'flex', gap: '10px' }}>
-                        <Button sx={{
-                            display: 'flex', gap: '10px', alignItems: 'center', padding: '6px 12px 6px', color: '#A9A9A9', backgroundColor: '#FAFAFA', borderRadius: '7px', border: '1px solid #EBEBEB', textTransform: 'none', '&:hover': {
-                                backgroundColor: '#F5F5F5'
-                            }
-                        }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <img src="assets/images/donate_icon.png" alt="" />
-                            </Box>
-                            <Typography sx={{ fontSize: '17px', fontWeight: 400, color: '#A9A9A9', paddingTop: '2px' }} >
-                                Support our project with a coin
-                            </Typography>
-                        </Button>
+                    {isUrlProfile ? <Box sx={{ display: 'flex', gap: '10px' }}>
+                        <DonationButton/>
                         <Box sx={{ display: 'flex', alignItems: 'center', paddingTop: '5px' }}>
                             <Button sx={{
                                 display: 'flex', alignItems: 'center', color: '#B5B5B5', textDecoration: 'underline', textUnderlineOffset: '3px', textDecorationColor: '#D8D8D8', backgroundColor: 'transparent',
@@ -53,15 +47,20 @@ const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClo
                             }}>
                                 Save changes
                             </Button>
-                            <Button sx={{ display: 'flex', alignItems: 'center', color: '#B5B5B5', textDecoration: 'underline', textUnderlineOffset: '3px', textDecorationColor: '#D8D8D8', backgroundColor: 'transparent',
+                            <Button sx={{
+                                display: 'flex', alignItems: 'center', color: '#B5B5B5', textDecoration: 'underline', textUnderlineOffset: '3px', textDecorationColor: '#D8D8D8', backgroundColor: 'transparent',
                                 '&:hover': {
                                     color: '#A0A0A0  ',
                                     backgroundColor: 'transparent'
-                                } }}>
+                                }
+                            }}>
                                 Reset changes
                             </Button>
                         </Box>
-                    </Box>
+                    </Box> : <Box sx={{ display: 'flex', gap: '10px' }}>
+                        <DonationButton/>
+                    </Box>}
+
                     <Box sx={{ display: 'flex', gap: '10px' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '5px' }}>
                             <Box onClick={() => toggleArchiveDrawer(true)}>
