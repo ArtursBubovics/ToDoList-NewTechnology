@@ -30,26 +30,35 @@ const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClo
         <Box>
             <AppBar position="static" sx={{ backgroundColor: 'transparent', boxShadow: 'none', borderBottom: '2px solid #EEEEEE' }}>
                 <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Button sx={{
-                        display: 'flex', gap: '10px', alignItems: 'center', padding: '6px 12px 6px', color: '#A9A9A9', backgroundColor: '#FAFAFA', borderRadius: '7px', border: '1px solid #EBEBEB', textTransform: 'none', '&:hover': {
-                            backgroundColor: '#F5F5F5'
-                        }
-                    }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <img src="assets/images/donate_icon.png" alt="" />
+                    <Box sx={{display: 'flex', gap: '10px'}}>
+                        <Button sx={{
+                            display: 'flex', gap: '10px', alignItems: 'center', padding: '6px 12px 6px', color: '#A9A9A9', backgroundColor: '#FAFAFA', borderRadius: '7px', border: '1px solid #EBEBEB', textTransform: 'none', '&:hover': {
+                                backgroundColor: '#F5F5F5'
+                            }
+                        }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <img src="assets/images/donate_icon.png" alt="" />
+                            </Box>
+                            <Typography sx={{ fontSize: '17px', fontWeight: 400, color: '#A9A9A9', paddingTop: '2px' }} >
+                                Support our project with a coin
+                            </Typography>
+                        </Button>
+                        <Box sx={{display: 'flex', alignItems: 'center', paddingTop: '5px'}}>
+                            <Button sx={{display: 'flex', alignItems: 'center', color: '#B5B5B5', textDecoration: 'underline', textUnderlineOffset: '3px',  textDecorationColor: '#D8D8D8'}}>
+                                Save changes
+                            </Button>
+                            <Button sx={{display: 'flex', alignItems: 'center', color: '#B5B5B5', textDecoration: 'underline', textUnderlineOffset: '3px',  textDecorationColor: '#D8D8D8'}}>
+                                Reset changes
+                            </Button>
                         </Box>
-                        <Typography sx={{ fontSize: '17px', fontWeight: 400, color: '#A9A9A9', paddingTop: '2px' }} >
-                            Support our project with a coin
-                        </Typography>
-                    </Button>
+                    </Box>
                     <Box sx={{ display: 'flex', gap: '10px' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '5px' }}>
-
                             <Box onClick={() => toggleArchiveDrawer(true)}>
                                 <HeaderIcons title="Archive" dotDisposition={{ top: "3px", right: "-2px" }} Icon={ArchiveIcon} invisible={true}></HeaderIcons>
                             </Box>
                             <Box onClick={() => toggleNotficationDrawer(true)}>
-                                <HeaderIcons title="Alerts" dotDisposition={{ top: "3px", right: "5px" }} Icon={NotificationsIcon} invisible={invisible}></HeaderIcons>
+                                <HeaderIcons title="Notifications" dotDisposition={{ top: "3px", right: "5px" }} Icon={NotificationsIcon} invisible={invisible}></HeaderIcons>
                             </Box>
                         </Box>
                         <Tooltip title="Quick settings" placement="bottom" arrow>
