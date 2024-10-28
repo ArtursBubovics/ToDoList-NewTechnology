@@ -6,7 +6,7 @@ const Profile = () => {
         <Box sx={{ width: '100%', height: '90vh', padding: '2% 2%' }}>
             <Box sx={{ width: '100%', height: '35%', display: 'flex', gap: '3%', padding: '1% 1%' }}>
                 <Button sx={{
-                    minWidth: '300px', height: '100%', padding: '2%', border: '1px solid #D6D6D6', borderRadius: '25px', justifyContent: 'flex-end', color: '#E6E6E6',
+                    minWidth: '300px', height: '100%', padding: '2%', border: '1px solid #D6D6D6', borderRadius: '25px', justifyContent: 'flex-end', color: 'none',
                     alignItems: 'flex-start', '&:hover': {
                         backgroundColor: 'transparent'
                     }
@@ -24,7 +24,6 @@ const Profile = () => {
                             label='Name'
                             variant='outlined'
                             size='medium'
-
                         />
 
                         <CustomTextField
