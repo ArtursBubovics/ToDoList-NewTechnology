@@ -6,8 +6,10 @@ const Profile = () => {
         <Box sx={{ width: '100%', height: '90vh', padding: '2% 2%' }}>
             <Box sx={{ width: '100%', height: '35%', display: 'flex', gap: '3%', padding: '1% 1%' }}>
                 <Button sx={{
-                    minWidth: '300px', height: '100%', padding: '2%', border: '1px solid #D6D6D6', borderRadius: '25px', justifyContent: 'flex-end',
-                    alignItems: 'flex-start'
+                    minWidth: '300px', height: '100%', padding: '2%', border: '1px solid #D6D6D6', borderRadius: '25px', justifyContent: 'flex-end', color: '#E6E6E6',
+                    alignItems: 'flex-start', '&:hover': {
+                        backgroundColor: 'transparent'
+                    }
                 }}>
                     <Box sx={{ height: '13%', display: 'flex', justifyContent: 'flex-end' }}>
                         <img src="/assets/images/addImage_Icon.png" alt="" />
