@@ -33,11 +33,17 @@ const typeDefs = gql`
     loginUser(name: String!, password: String!): Token
     verifyToken(token: String!, type: TokenType!): TokenStatus
     refreshTokens(refreshToken: String!): Token
+    getUserInformation(id: Int!): MainUserInfo
   }
 
   type Token {
     accessToken: String
     refreshToken: String
+  }
+
+  type MainUserInfo{
+    name: String,
+    gmail: String
   }
 
   enum TokenType {

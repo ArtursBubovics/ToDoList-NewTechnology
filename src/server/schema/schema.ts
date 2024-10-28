@@ -32,10 +32,11 @@ interface VerifyTokenArgs {
 }
 
 interface User {
-  UserID: string; // Обновите интерфейс, чтобы использовать id
+  UserID: string;
   name: string;
-  gmail: string; // Обновите поле email на gmail
+  gmail: string;
 }
+
 
 
 
@@ -49,25 +50,25 @@ export function isAuthResponse(data: any): data is AuthResponse {
 const resolvers = {
   Query: {
     loginUser: async (_: any, { name, password }: { name: string, password: string }) => {
-      try{
+      try {
         const userResult = await db.query('SELECT * FROM "User" WHERE name = $1', [name]);
 
         if (!userResult.rows.length) {
           throw new Error('Invalid credentials');
         }
-  
+
         const user = userResult.rows[0];
         const validPassword = await bcrypt.compare(password, user.password);
-  
+
         if (!validPassword) {
           throw new Error('Invalid credentials');
         }
-  
+
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
-  
+
         return { accessToken, refreshToken };
-      }catch (error) {
+      } catch (error) {
         console.error('Error loginUser:', error);
       }
 
@@ -123,14 +124,35 @@ const resolvers = {
         return false;
       }
     },
-    
+
     refreshTokens: async (_: any, { refreshToken }: { refreshToken: string }) => {
       const tokens = await refreshTokens(refreshToken);
       if (!tokens) {
         throw new Error('Failed to refresh tokens');
       }
       return tokens;
+    },
+
+    getUserInformation: async (_: any, { id }: {id: number}) => {
+      const existingUserName = await db.query('SELECT * FROM "User" WHERE UserID = $1', [id]);
+
+      const user = existingUserName.rows[0];
+
+      try {
+        if (existingUserName.rows.length === 0) {
+          throw new Error('User not found');
+        }
+
+        const { name, gmail } = user;
+
+        return {name, gmail}
+
+      } catch (error) {
+        console.error('Error getUserInformation:', error);
+      }
+
     }
+
 
   },
   Mutation: {
