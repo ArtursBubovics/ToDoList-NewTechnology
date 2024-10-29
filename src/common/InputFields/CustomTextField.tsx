@@ -1,4 +1,4 @@
-import { TextField, TextFieldProps } from "@mui/material";
+import { TextField, TextFieldProps, outlinedInputClasses } from "@mui/material";
 
 interface CustomTextFieldProps extends Omit<TextFieldProps, 'value'> {
     backgroundColor?: string;
@@ -12,6 +12,9 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({ backgroundColor, noBo
             InputLabelProps={{
                 sx: {
                     marginTop: '-5px',
+                    '&.Mui-focused': {
+                        color: '#7F7F7F',
+                    },
                 },
             }}
             sx={{
@@ -21,7 +24,20 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({ backgroundColor, noBo
                     padding: '10.5px 16px',
                     backgroundColor: backgroundColor ? backgroundColor : 'transparent',
                 },
-                ...(noBorder && { "& fieldset": { border: 'none' } })
+                ...(noBorder && { "& fieldset": { border: 'none' } }),
+
+                '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                        borderColor: '#B5B5B5',
+                    },
+                    '&:hover fieldset': {
+                        borderColor: '#B5B5B5',
+                    },
+                    '&.Mui-focused fieldset': {
+                        borderColor: '#B5B5B5',
+                    },
+                },
+
             }}
             defaultValue={value}
             {...props}
