@@ -1,4 +1,4 @@
-import { TextField, TextFieldProps, outlinedInputClasses } from "@mui/material";
+import { TextField, TextFieldProps } from "@mui/material";
 
 interface CustomTextFieldProps extends Omit<TextFieldProps, 'value'> {
     backgroundColor?: string;
