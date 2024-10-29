@@ -28,13 +28,13 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({ backgroundColor, noBo
 
                 '& .MuiOutlinedInput-root': {
                     '& fieldset': {
-                        borderColor: '#B5B5B5',
+                        borderColor: '#CBCBCB',
                     },
                     '&:hover fieldset': {
-                        borderColor: '#B5B5B5',
+                        borderColor: '#BFBFBF',
                     },
                     '&.Mui-focused fieldset': {
-                        borderColor: '#B5B5B5',
+                        borderColor: '#DCDCDC',
                     },
                 },
 
