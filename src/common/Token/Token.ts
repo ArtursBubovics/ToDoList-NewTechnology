@@ -7,6 +7,12 @@ interface User {
   gmail: string;
 }
 
+interface TokenStatus {
+  user: User;
+  iat: number;
+  exp: number;
+}
+
 enum TokenType {
   ACCESS = 'ACCESS',
   REFRESH = 'REFRESH'
@@ -34,14 +40,14 @@ export const generateRefreshToken = (user: User) => {
 
 export const refreshTokens = async (refreshToken: string): Promise<{ accessToken: string, refreshToken: string } | null> => {
   try {
-    const user = verifyToken(refreshToken, TokenType.REFRESH); // ихменить логику //получить ответ работает ли токен, потом получить данные из бд их передать на генерацию
+    const data = verifyToken(refreshToken, TokenType.REFRESH); // ихменить логику //получить ответ работает ли токен, потом получить данные из бд их передать на генерацию
 
-    if (!user) {
+    if (!data) {
       throw new Error('Invalid refresh token');
     }
 
-    const newAccessToken = generateAccessToken(user);
-    const newRefreshToken = generateRefreshToken(user);
+    const newAccessToken = generateAccessToken(data.user);
+    const newRefreshToken = generateRefreshToken(data.user);
 
     return { accessToken: newAccessToken, refreshToken: newRefreshToken };
   } catch (error) {
@@ -51,7 +57,7 @@ export const refreshTokens = async (refreshToken: string): Promise<{ accessToken
 };
 
 // Функция для проверки токена
-export const verifyToken = (token: string, type: TokenType): User | null => {
+export const verifyToken = (token: string, type: TokenType): TokenStatus | null => {
   try {
     let decoded;
     if (type === TokenType.ACCESS) {
@@ -60,9 +66,18 @@ export const verifyToken = (token: string, type: TokenType): User | null => {
       decoded = jwt.verify(token, REFRESH_TOKEN_SECRET);
     }
     console.log('Decoded Token:', decoded); // Логирование декодированного токена
-    return decoded as User;
-  } catch (error) {
-    console.error('Token verification failed:', error); // Логирование ошибки
-    return null;
+    return decoded
+  } catch (error: unknown) {
+
+    if (error instanceof Error) {
+      if (error.message === 'TokenExpiredError') {
+        console.error('Token expired');
+      }
+      console.error('Token verification failed:', error); // Логирование ошибки
+    } else {
+      console.error('Unknown error during token verification');
+    }
+
+    return null
   }
 };

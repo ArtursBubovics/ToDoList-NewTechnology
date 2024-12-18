@@ -37,7 +37,13 @@ interface User {
   gmail: string;
 }
 
-
+interface Context {
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
 
 
 export function isAuthResponse(data: any): data is AuthResponse {
@@ -85,14 +91,20 @@ const resolvers = {
       try {
         let result = verifyToken(token, type)
 
-        if (result) {
-          return { valid: true, message: "Token is valid", data: result };
-        } else {
-          return { valid: false, message: "Token is invalid or expired", data: result };
+        if (!result) {
+          throw new Error('result is null');
         }
-      } catch (error) {
-        console.error('Error verifying token:', error);
-        return { valid: false, message: "Error verifying token", data: null };
+
+        if (result) {
+          console.log('verifyToken shema value:')
+          console.log(result)
+          return { valid: true, message: "Token is valid", user: result };
+        } else {
+          return { valid: false, message: "Token is invalid or expired", user: null };
+        }
+      } catch (error: unknown) {
+        console.error('Error verifying token:', error instanceof Error ? error.message : error);
+        return { valid: false, message: "Error verifying token", user: null };
       }
     },
 
@@ -125,34 +137,48 @@ const resolvers = {
       }
     },
 
+    passwordValidation: async (_: any, { UserID, currentPassword }: { UserID: number, currentPassword: string }) => {
+      console.log('Schema passwordValidation UserID: ', UserID);
+
+      if (!currentPassword) {
+        throw new Error('Either password must be provided.');
+      }
+
+      try {
+        console.error('shema passwordValidation go2')
+
+        const result = await db.query('SELECT "UserID", password FROM "User" WHERE "UserID" = $1', [UserID]);
+        console.log('Schema passwordValidation result: ', result);
+        console.log('passwordValidation result.rows.length: ', result.rows.length);
+
+        if (result.rows.length > 0) {
+          const user = result.rows[0];
+          const hashedPassword = user.password;
+
+          const isPasswordValid = await bcrypt.compare(currentPassword, hashedPassword);
+
+          if (isPasswordValid) {
+            console.error('Schema passwordValidation go3');
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      } catch (error) {
+        console.error('Error checking user:', error);
+        return false;
+      }
+    },
+
     refreshTokens: async (_: any, { refreshToken }: { refreshToken: string }) => {
       const tokens = await refreshTokens(refreshToken);
       if (!tokens) {
         throw new Error('Failed to refresh tokens');
       }
       return tokens;
-    },
-
-    getUserInformation: async (_: any, { id }: {id: number}) => {
-      const existingUserName = await db.query('SELECT * FROM "User" WHERE UserID = $1', [id]);
-
-      const user = existingUserName.rows[0];
-
-      try {
-        if (existingUserName.rows.length === 0) {
-          throw new Error('User not found');
-        }
-
-        const { name, gmail } = user;
-
-        return {name, gmail}
-
-      } catch (error) {
-        console.error('Error getUserInformation:', error);
-      }
-
     }
-
 
   },
   Mutation: {
@@ -215,6 +241,34 @@ const resolvers = {
       console.log('registerUser finish');
 
       return { accessToken, refreshToken };
+    },
+
+    updateUserInfo: async (_: any, { UserID, name, gmail, password }: { UserID: number, name: string, gmail: string, password: string }) => {
+      if (!UserID && !name && !gmail && !password) {
+        throw new Error('updateUserInfo data can not to be null or underfind');
+      }
+
+      console.error('UserID, , name, gmail, password')
+      console.error(UserID, name, gmail, password)
+
+      try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const encryptedEmail = CryptoJS.AES.encrypt(gmail, SECRET_KEY).toString();
+
+        const result = await db.query('UPDATE "User" SET "name" = $2, "gmail" = $3, "password" = $4 WHERE "UserID" = $1', [UserID, name, encryptedEmail, hashedPassword]);
+
+        if (result.rowCount === 0) {
+          throw new Error('User not found or no changes made.');
+        }
+
+        console.log('User updated successfully.');
+        return { success: true, message: 'User updated successfully' };
+
+      } catch (error) {
+        console.error('Error updating user info:', error);
+
+        return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+      }
     }
   }
 };

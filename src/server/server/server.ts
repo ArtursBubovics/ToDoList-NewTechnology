@@ -4,10 +4,12 @@ import cors from 'cors';
 import verifyTokenMiddleware from '../../common/Token/verifyTokenMiddleware';
 import cookieParser from 'cookie-parser';
 import { GraphQLResponse, GraphQLRequestContext } from 'apollo-server-types';
+import { graphql } from 'graphql';
 //import publicRouter from '../Routes/publicRouter';
 const { ApolloServer, gql } = require('apollo-server-express');
 const express = require('express');
 const resolver = require('../schema/schema');
+const { graphqlHTTP } = require('express-graphql');
 require('dotenv').config();
 
 
@@ -33,7 +35,8 @@ const typeDefs = gql`
     loginUser(name: String!, password: String!): Token
     verifyToken(token: String!, type: TokenType!): TokenStatus
     refreshTokens(refreshToken: String!): Token
-    getUserInformation(id: Int!): MainUserInfo
+    getUserInformation(UserID: Int!): MainUserInfo
+    passwordValidation(UserID: Int!, currentPassword: String!): Boolean
   }
 
   type Token {
@@ -54,11 +57,25 @@ const typeDefs = gql`
   type TokenStatus {
     valid: Boolean!
     message: String
-    data: String
+    user: User
+  }
+
+  type User {
+    UserID: Int!
+    name: String!
+    gmail: String!
+    iat: Int!
+    exp: Int!
+  }
+
+  type UpdateUserInfo {
+    success: Boolean!,
+    message: String!
   }
 
   type Mutation {
     registerUser(name: String!, gmail: String!, password: String!): Token
+    updateUserInfo(UserID: Int!, name: String!, gmail: String!, password: String!): UpdateUserInfo
   }
 
 `;
@@ -78,6 +95,10 @@ const server = new ApolloServer({
 
 server.start().then(() => {
   server.applyMiddleware({ app });
+ 
+  app.use('/graphql', graphqlHTTP({
+    graphiql: true
+  }));
 
   app.listen(PORT, (err?: Error) => {
     if (err) {

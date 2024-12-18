@@ -4,9 +4,10 @@ interface CustomTextFieldProps extends Omit<TextFieldProps, 'value'> {
     backgroundColor?: string;
     noBorder?: boolean;
     value?: string;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
-const CustomTextField: React.FC<CustomTextFieldProps> = ({ backgroundColor, noBorder, value, ...props }) => {
+const CustomTextField: React.FC<CustomTextFieldProps> = ({ backgroundColor, noBorder, value, onChange, ...props }) => {
     return (
         <TextField
             InputLabelProps={{
@@ -40,6 +41,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({ backgroundColor, noBo
 
             }}
             defaultValue={value}
+            onChange={onChange}
             {...props}
         />
     )

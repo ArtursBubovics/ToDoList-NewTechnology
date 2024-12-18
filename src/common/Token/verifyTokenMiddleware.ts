@@ -1,20 +1,22 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from './Token';
 
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'youraccesstokensecret';
-
-interface UserPayload {
+interface User {
   UserID: string;
   name: string;
   gmail: string;
-  iat?: number;
-  exp?: number;
+}
+
+interface TokenStatus {
+  user: User;
+  iat: number;
+  exp: number;
 }
 
 declare global {
   namespace Express {
     interface Request {
-      user?: UserPayload;
+      user?: User;
     }
   }
 }
@@ -41,7 +43,6 @@ const verifyTokenMiddleware = (req: Request, res: Response, next: NextFunction) 
   }
 
   const authHeader = req.headers.authorization;
-
   if (!authHeader) {
     console.error('verifyTokenMiddleware error');
     return res.sendStatus(403); // Forbidden
@@ -55,7 +56,7 @@ const verifyTokenMiddleware = (req: Request, res: Response, next: NextFunction) 
     return res.sendStatus(401); // Unauthorized  
   }
 
-  req.user = decoded as UserPayload;
+  req.user = req.user = decoded.user;
   next();
 };
 
