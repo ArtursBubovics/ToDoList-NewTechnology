@@ -58,6 +58,8 @@ interface RootState {
 
 
 const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClose }) => {
+    
+    let approvedPassword;
     const invisible = false;
 
     const dispatch = useDispatch();
@@ -130,8 +132,9 @@ const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClo
             console.log(passwordValidationData)
 
             if (passwordValidationData && passwordValidationData.passwordValidation) {
-
-                const { data: updateUserInfoData } = await updateUserInfo({ variables: { UserID: verifyTokenData.verifyToken.user.UserID, name: userProfileName, gmail: userProfileGmail, password: userProfileNewPassword } })
+                !userProfileNewPassword ? approvedPassword = userProfileCurrentPassword : approvedPassword = userProfileNewPassword
+                
+                const { data: updateUserInfoData } = await updateUserInfo({ variables: { UserID: verifyTokenData.verifyToken.user.UserID, name: userProfileName, gmail: userProfileGmail, password: approvedPassword } })
 
                 console.log('updateUserInfoData is:')
                 console.log(updateUserInfoData)
