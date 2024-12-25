@@ -293,7 +293,6 @@ const AuthFormBlock: React.FC<AuthFormBlockProps> = ({ authType }) => {
             }
           } else {
             setAlert('User not found. Please sign up.', 'info');
-            navigate('/SignUp');
           }
         } else {
           // Обработка случая, когда запрос не вернул данных или произошла ошибка
