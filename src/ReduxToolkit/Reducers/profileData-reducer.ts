@@ -13,8 +13,12 @@ export const profileDataSlice = createSlice({
   initialState,
   reducers: {
     setUserInfo: (state, action) => {
-      state.name = action.payload.name;
-      state.gmail = action.payload.gmail;
+      if (action.payload.name !== undefined) {
+        state.name = action.payload.name;
+    }
+    if (action.payload.gmail !== undefined) {
+        state.gmail = action.payload.gmail;
+    }
     },
     setNewPasswordInfo: (state, action) => {
       state.newPassword = action.payload.newPassword;

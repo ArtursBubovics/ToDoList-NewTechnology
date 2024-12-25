@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import CryptoJS from 'crypto-js';
 import { useDispatch } from "react-redux";
-import { setUserInfo, setNewPasswordInfo, setCurrentPasswordInfo  } from "../../../ReduxToolkit/Reducers/profileData-reducer";
+import { setUserInfo, setNewPasswordInfo, setCurrentPasswordInfo } from "../../../ReduxToolkit/Reducers/profileData-reducer";
 
 const SECRET_KEY = process.env.REACT_APP_SECRET_KEY
 
@@ -35,7 +35,7 @@ const VERIFY_TOKEN = gql`
 const Profile = () => {
     const cookies = new Cookies();
     const dispatch = useDispatch();
-    
+
     const [userInfo, setUserInfoState] = useState({ name: '', gmail: '' });
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -68,14 +68,35 @@ const Profile = () => {
         }
     };
 
+    const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setUserInfoState({
+            ...userInfo,
+            name: event.target.value
+        });
+
+        dispatch(setUserInfo({
+            name: event.target.value
+        }))
+    }
+
+    const handleChangeGmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setUserInfoState({
+            ...userInfo,
+            gmail: event.target.value
+        });
+
+        dispatch(setUserInfo({ gmail: event.target.value}))
+    }
+
+
     const handleChangeCurrentPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
         setCurrentPassword(event.target.value)
-        dispatch(setCurrentPasswordInfo({currentPassword: event.target.value}))
+        dispatch(setCurrentPasswordInfo({ currentPassword: event.target.value }))
     }
 
     const handleChangeNewPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewPassword(event.target.value)
-        dispatch(setNewPasswordInfo({newPassword: event.target.value}))
+        dispatch(setNewPasswordInfo({ newPassword: event.target.value }))
     }
 
     useEffect(() => {
@@ -100,17 +121,17 @@ const Profile = () => {
                         name: userResponse.name,
                         gmail: decryptedEmail,
                     }))
-                    
+
                     setUserInfoState({
                         name: userResponse.name,
                         gmail: decryptedEmail,
                     });
                 }
-            } catch(error) {
+            } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
                 setLoading(false);
-              }
+            }
         };
 
         fetchUserInfo();
@@ -140,6 +161,7 @@ const Profile = () => {
                             label='Name'
                             variant='outlined'
                             size='medium'
+                            onChange={handleChangeName}
                         />
 
                         <CustomTextField
@@ -148,6 +170,7 @@ const Profile = () => {
                             label='Gmail'
                             variant='outlined'
                             size='medium'
+                            onChange={handleChangeGmail}
                         />
 
                         <CustomTextField
