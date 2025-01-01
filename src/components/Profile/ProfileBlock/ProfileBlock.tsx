@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material"
 import CustomTextField from "../../../common/InputFields/CustomTextField"
-import { gql, useLazyQuery } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { gql, useLazyQuery} from "@apollo/client";
+import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import CryptoJS from 'crypto-js';
 import { useDispatch } from "react-redux";
@@ -35,6 +35,7 @@ const VERIFY_TOKEN = gql`
 const Profile = () => {
     const cookies = new Cookies();
     const dispatch = useDispatch();
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const [userInfo, setUserInfoState] = useState({ name: '', gmail: '' });
     const [currentPassword, setCurrentPassword] = useState('');
@@ -99,6 +100,25 @@ const Profile = () => {
         dispatch(setNewPasswordInfo({ newPassword: event.target.value }))
     }
 
+    const handleImg = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    }
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            console.log("Выбранный файл:", file);
+            
+            console.log(file.name); // Имя файла
+            console.log(file.size); // Размер файла
+            console.log(file.type); // MIME тип файла
+            console.log(file.lastModified); // Время последнего изменени
+            // Здесь вы можете отправить файл на сервер
+        };
+    }
+
     useEffect(() => {
         console.log('Effect is running');
         const fetchUserInfo = async () => {
@@ -147,11 +167,18 @@ const Profile = () => {
                     alignItems: 'flex-start', '&:hover': {
                         backgroundColor: 'transparent'
                     }
-                }}>
+                }} onClick={handleImg}>
                     <Box sx={{ height: '13%', display: 'flex', justifyContent: 'flex-end' }}>
                         <img src="/assets/images/addImage_Icon.png" alt="" />
                     </Box>
                 </Button>
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                />
                 <Box sx={{ width: '100%', minHeight: '65%' }}>
                     <Box sx={{ width: '100%', height: '100%', border: '1px solid #D6D6D6', borderRadius: '25px', padding: '5%', display: 'grid', gap: '3%', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))' }}>
 

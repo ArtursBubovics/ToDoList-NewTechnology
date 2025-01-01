@@ -3,6 +3,8 @@ import CryptoJS from 'crypto-js';
 import bcrypt from 'bcryptjs';
 import { generateAccessToken, generateRefreshToken, refreshTokens, verifyToken } from '../../common/Token/Token';
 
+const GraphQLUpload = require('graphql-upload');
+
 const db = require('../server/db');
 
 const SECRET_KEY = process.env.SECRET_KEY
@@ -54,6 +56,7 @@ export function isAuthResponse(data: any): data is AuthResponse {
 }
 
 const resolvers = {
+  Upload: GraphQLUpload,
   Query: {
     loginUser: async (_: any, { name, password }: { name: string, password: string }) => {
       try {
@@ -268,6 +271,34 @@ const resolvers = {
         console.error('Error updating user info:', error);
 
         return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+      }
+    },
+    singleUpload: async (_: any, { file }: { file: any }) => {
+      const { createReadStream, filename, mimetype, encoding } = await file;
+
+      // Здесь вы можете обработать файл (например, сохранить его на сервере)
+      const stream = createReadStream();
+      const pathName = `./uploads/${filename}`;
+
+      try {
+        await new Promise<void>((resolve, reject) => {
+          const writeStream = require('fs').createWriteStream(pathName);
+          stream.pipe(writeStream);
+          writeStream.on('finish', () => {
+            console.log('Файл успешно записан!');
+            resolve();  // Промис успешно разрешен
+          });
+
+          writeStream.on('error', (error: any) => {
+            console.error('Ошибка записи файла:', error);
+            reject(error);  // Промис отклонен с ошибкой
+          });
+        });
+
+        return true;
+      } catch (error) {
+        console.error('Error saving file:', error);
+        throw new Error('File upload failed');
       }
     }
   }

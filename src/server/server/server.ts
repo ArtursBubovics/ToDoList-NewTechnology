@@ -1,11 +1,9 @@
-// const { makeExecutableSchema } = require('@graphql-tools/schema');
 import { Request } from 'express';
 import cors from 'cors';
 import verifyTokenMiddleware from '../../common/Token/verifyTokenMiddleware';
 import cookieParser from 'cookie-parser';
 import { GraphQLResponse, GraphQLRequestContext } from 'apollo-server-types';
-import { graphql } from 'graphql';
-//import publicRouter from '../Routes/publicRouter';
+import { graphqlUploadExpress } from 'graphql-upload';
 const { ApolloServer, gql } = require('apollo-server-express');
 const express = require('express');
 const resolver = require('../schema/schema');
@@ -15,6 +13,8 @@ require('dotenv').config();
 
 const app = express();
 const PORT = 3005;
+
+app.use(graphqlUploadExpress());
 
 app.use(cookieParser());
 app.use(express.json());
@@ -28,6 +28,7 @@ app.use(verifyTokenMiddleware);
 
 
 const typeDefs = gql`
+  scalar Upload
 
   type Query {
     checkUserExistence(name: String!, password: String!): Boolean
@@ -76,6 +77,7 @@ const typeDefs = gql`
   type Mutation {
     registerUser(name: String!, gmail: String!, password: String!): Token
     updateUserInfo(UserID: Int!, name: String!, gmail: String!, password: String!): UpdateUserInfo
+    singleUpload(file: Upload!): Boolean
   }
 
 `;
@@ -90,7 +92,7 @@ const server = new ApolloServer({
   formatResponse: (response: GraphQLResponse, requestContext: GraphQLRequestContext) => {
     console.log("Response sent at:", new Date());
     return response;
-  },
+  }
 });
 
 server.start().then(() => {
