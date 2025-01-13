@@ -284,7 +284,7 @@ const resolvers = {
       console.log(`MIME type: ${mimetype}`);
       console.log(`Encoding: ${encoding}`);
       
-      const uploadPath = path.join(process.cwd(), 'uploads');
+      const uploadPath = path.join(process.cwd(), 'public', 'assets', 'uploads');
       if (!fs.existsSync(uploadPath)) {
         fs.mkdirSync(uploadPath, { recursive: true });
         console.log("uploads folder created.");
@@ -294,7 +294,6 @@ const resolvers = {
       const out = createWriteStream(pathName);
 
       try {
-        // Прокачка потока через pipeline
         await pipe(createReadStream(), out);
         
         console.log(`File ${filename} uploaded successfully.`);
