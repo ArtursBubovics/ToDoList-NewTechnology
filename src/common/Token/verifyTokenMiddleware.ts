@@ -35,11 +35,18 @@ const verifyTokenMiddleware = (req: Request, res: Response, next: NextFunction) 
   //   body: req.body
   // });
 
-  const excludedOperations = ['RegisterUser', 'LoginUser','VerifyToken', 'RefreshTokens', 'CheckUserExistence'];
+  const excludedOperations = ['RegisterUser', 'LoginUser', 'VerifyToken', 'RefreshTokens', 'CheckUserExistence'];
+  if (req.path === '/graphql') {
+    return next(); // Пропустить проверку для GraphQL
+  }
 
-  if (req.path === '/graphql' && req.body.operationName && excludedOperations.includes(req.body.operationName)) {
-    console.log(`Excluding operation: ${req.body.operationName}`);
-    return next();
+  if (req.path === '/graphql') {
+    const operationName = req.body?.operationName || req.body?.query?.match(/query\s+(\w+)/)?.[1];
+    console.log(`Operation Name: ${operationName}`);
+    if (operationName && excludedOperations.includes(operationName)) {
+      console.log(`Skipping auth for operation: ${operationName}`);
+      return next();
+    }
   }
 
   const authHeader = req.headers.authorization;

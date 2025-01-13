@@ -1,14 +1,14 @@
-import { ApolloClient, InMemoryCache, HttpLink, Observable, gql  } from '@apollo/client';
+import { ApolloClient, InMemoryCache, Observable, gql  } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
 import { from, FetchResult } from '@apollo/client/link/core';
 import Cookies from 'universal-cookie';
 import { NavigateFunction  } from 'react-router-dom';
-
+const { createUploadLink } = require('apollo-upload-client');
 const cookies = new Cookies();
 
 
-const httpLink = new HttpLink({
+const httpLink = new createUploadLink({
   uri: 'http://localhost:3005/graphql',
 });
 
@@ -49,7 +49,7 @@ const errorLink = (navigate: NavigateFunction) => onError(({ graphQLErrors, oper
 
           // Выполнение GraphQL мутации для обновления токенов
           const client = new ApolloClient({
-            link: httpLink,
+            link: from([errorLink(navigate), authLink, httpLink]),
             cache: new InMemoryCache(),
           });
 

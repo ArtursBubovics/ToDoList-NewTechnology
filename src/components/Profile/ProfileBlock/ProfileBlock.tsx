@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material"
 import CustomTextField from "../../../common/InputFields/CustomTextField"
-import { gql, useLazyQuery} from "@apollo/client";
+import { gql, useLazyQuery, useMutation} from "@apollo/client";
 import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import CryptoJS from 'crypto-js';
@@ -32,6 +32,12 @@ const VERIFY_TOKEN = gql`
   }
 `;
 
+const SINGLE_UPLOAD = gql`
+    mutation singleUpload($file: Upload!) {
+        singleUpload(file: $file)
+    }
+`
+
 const Profile = () => {
     const cookies = new Cookies();
     const dispatch = useDispatch();
@@ -42,6 +48,7 @@ const Profile = () => {
     const [newPassword, setNewPassword] = useState('');
 
     const [verifyToken] = useLazyQuery(VERIFY_TOKEN);
+    const [uploadFile] = useMutation(SINGLE_UPLOAD);
     const [loading, setLoading] = useState(true);
 
     const getUserDataFromToken = async () => {
@@ -106,16 +113,21 @@ const Profile = () => {
         }
     }
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async  (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             console.log("Выбранный файл:", file);
-            
+            console.log('File received:', file);
             console.log(file.name); // Имя файла
             console.log(file.size); // Размер файла
             console.log(file.type); // MIME тип файла
             console.log(file.lastModified); // Время последнего изменени
-            // Здесь вы можете отправить файл на сервер
+
+            const {data} = await uploadFile({ variables: { file: file  }})
+
+            console.log('response data is:')
+            console.log(data)
+            alert(`Успешно загружено: ${data.uploadFile}`);
         };
     }
 

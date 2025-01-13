@@ -2,9 +2,13 @@ import 'dotenv/config';
 import CryptoJS from 'crypto-js';
 import bcrypt from 'bcryptjs';
 import { generateAccessToken, generateRefreshToken, refreshTokens, verifyToken } from '../../common/Token/Token';
-
-const GraphQLUpload = require('graphql-upload');
-
+import { FileUpload, GraphQLUpload } from "graphql-upload";
+import { createWriteStream } from 'fs';
+import { promisify } from 'util';
+import { pipeline } from 'stream';
+import path from 'path';
+import fs from 'fs';
+const pipe = promisify(pipeline);
 const db = require('../server/db');
 
 const SECRET_KEY = process.env.SECRET_KEY
@@ -273,28 +277,27 @@ const resolvers = {
         return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
       }
     },
-    singleUpload: async (_: any, { file }: { file: any }) => {
+    singleUpload: async (parent: any, { file }: { file: FileUpload }): Promise<boolean> => {
       const { createReadStream, filename, mimetype, encoding } = await file;
 
-      // Здесь вы можете обработать файл (например, сохранить его на сервере)
-      const stream = createReadStream();
-      const pathName = `./uploads/${filename}`;
+      console.log(`Filename: ${filename}`);
+      console.log(`MIME type: ${mimetype}`);
+      console.log(`Encoding: ${encoding}`);
+      
+      const uploadPath = path.join(process.cwd(), 'uploads');
+      if (!fs.existsSync(uploadPath)) {
+        fs.mkdirSync(uploadPath, { recursive: true });
+        console.log("uploads folder created.");
+      }
+
+      const pathName = path.join(uploadPath, filename);
+      const out = createWriteStream(pathName);
 
       try {
-        await new Promise<void>((resolve, reject) => {
-          const writeStream = require('fs').createWriteStream(pathName);
-          stream.pipe(writeStream);
-          writeStream.on('finish', () => {
-            console.log('Файл успешно записан!');
-            resolve();  // Промис успешно разрешен
-          });
-
-          writeStream.on('error', (error: any) => {
-            console.error('Ошибка записи файла:', error);
-            reject(error);  // Промис отклонен с ошибкой
-          });
-        });
-
+        // Прокачка потока через pipeline
+        await pipe(createReadStream(), out);
+        
+        console.log(`File ${filename} uploaded successfully.`);
         return true;
       } catch (error) {
         console.error('Error saving file:', error);

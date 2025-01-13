@@ -4,23 +4,21 @@ import verifyTokenMiddleware from '../../common/Token/verifyTokenMiddleware';
 import cookieParser from 'cookie-parser';
 import { GraphQLResponse, GraphQLRequestContext } from 'apollo-server-types';
 import { graphqlUploadExpress } from 'graphql-upload';
+import path from 'path';
 const { ApolloServer, gql } = require('apollo-server-express');
 const express = require('express');
 const resolver = require('../schema/schema');
-const { graphqlHTTP } = require('express-graphql');
 require('dotenv').config();
-
 
 const app = express();
 const PORT = 3005;
 
 app.use(graphqlUploadExpress());
-
 app.use(cookieParser());
 app.use(express.json());
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: ['http://localhost:3000' , 'https://studio.apollographql.com'],
   credentials: true,
 }));
 
@@ -79,12 +77,13 @@ const typeDefs = gql`
     updateUserInfo(UserID: Int!, name: String!, gmail: String!, password: String!): UpdateUserInfo
     singleUpload(file: Upload!): Boolean
   }
-
+ 
 `;
 
 const server = new ApolloServer({
   typeDefs,
   resolvers: resolver,
+  uploads: false,
   context: ({ req }: { req: Request }) => {
     console.log("Request received at:", new Date());
     return { user: req.user };
@@ -92,15 +91,20 @@ const server = new ApolloServer({
   formatResponse: (response: GraphQLResponse, requestContext: GraphQLRequestContext) => {
     console.log("Response sent at:", new Date());
     return response;
-  }
+  },
+  playground: true, // Включает GraphiQL (в ApolloServer это называется playground)
+  introspection: true, // Делает схему доступной для клиента
 });
 
 server.start().then(() => {
-  server.applyMiddleware({ app });
- 
-  app.use('/graphql', graphqlHTTP({
-    graphiql: true
-  }));
+  server.applyMiddleware({ app,
+    cors: {
+      origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
+      credentials: true,
+    },
+   });
+
+   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
   app.listen(PORT, (err?: Error) => {
     if (err) {
