@@ -1,11 +1,12 @@
 import { Box, Button } from "@mui/material"
 import CustomTextField from "../../../common/InputFields/CustomTextField"
-import { gql, useLazyQuery, useMutation} from "@apollo/client";
+import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import CryptoJS from 'crypto-js';
 import { useDispatch } from "react-redux";
 import { setUserInfo, setNewPasswordInfo, setCurrentPasswordInfo } from "../../../ReduxToolkit/Reducers/profileData-reducer";
+import { useProfileImage } from "../../../common/AccountImage/ProfileImageContext";
 
 const SECRET_KEY = process.env.REACT_APP_SECRET_KEY
 
@@ -39,6 +40,9 @@ const SINGLE_UPLOAD = gql`
 `
 
 const Profile = () => {
+    const SECRET_KEY = process.env.REACT_APP_SECRET_KEY as string;
+    const initialImageFilePath = '/assets/uploads/'
+
     const cookies = new Cookies();
     const dispatch = useDispatch();
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -46,6 +50,7 @@ const Profile = () => {
     const [userInfo, setUserInfoState] = useState({ name: '', gmail: '' });
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const {imagePath, setImagePath} = useProfileImage();
 
     const [verifyToken] = useLazyQuery(VERIFY_TOKEN);
     const [uploadFile] = useMutation(SINGLE_UPLOAD);
@@ -93,7 +98,7 @@ const Profile = () => {
             gmail: event.target.value
         });
 
-        dispatch(setUserInfo({ gmail: event.target.value}))
+        dispatch(setUserInfo({ gmail: event.target.value }))
     }
 
 
@@ -113,8 +118,10 @@ const Profile = () => {
         }
     }
 
-    const handleFileChange = async  (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
+        let encryptedPath;
+
         if (file) {
             console.log("Выбранный файл:", file);
             console.log('File received:', file);
@@ -123,16 +130,40 @@ const Profile = () => {
             console.log(file.type); // MIME тип файла
             console.log(file.lastModified); // Время последнего изменени
 
-            const {data} = await uploadFile({ variables: { file: file  }})
+            const { data } = await uploadFile({ variables: { file: file } })
 
             console.log('response data is:')
             console.log(data)
-            alert(`Успешно загружено: ${data.uploadFile}`);
+
+            if (data.singleUpload) {
+                encryptedPath = CryptoJS.AES.encrypt(`${initialImageFilePath}${file.name}`, SECRET_KEY).toString();
+                localStorage.setItem("encryptedAvatarImagePath", encryptedPath);
+                setImagePath(`${initialImageFilePath}${file.name}`);
+
+                console.log(encryptedPath)
+            } else {
+                console.error("Failed to upload file");
+            }
+
+            console.log(file.name)
         };
     }
 
     useEffect(() => {
         console.log('Effect is running');
+
+        const encryptedPath = localStorage.getItem("encryptedAvatarImagePath");
+
+        if (encryptedPath) {
+            try {
+                const decryptedBytes = CryptoJS.AES.decrypt(encryptedPath, SECRET_KEY);
+                const decryptedPath = decryptedBytes.toString(CryptoJS.enc.Utf8);
+                setImagePath(decryptedPath);
+            } catch (error) {
+                console.error("Error decrypting image path:", error);
+            }
+        }
+
         const fetchUserInfo = async () => {
             try {
                 setLoading(true);
@@ -175,14 +206,20 @@ const Profile = () => {
         <Box sx={{ width: '100%', height: '90vh', padding: '2% 2%' }}>
             <Box sx={{ width: '100%', height: '35%', display: 'flex', gap: '3%', padding: '1% 1%' }}>
                 <Button sx={{
-                    minWidth: '300px', height: '100%', padding: '2%', border: '1px solid #D6D6D6', borderRadius: '25px', justifyContent: 'flex-end', color: 'white',
+                    minWidth: '300px', maxWidth: '400px', height: '100%', padding: '2%', border: '1px solid #D6D6D6', borderRadius: '25px', justifyContent: 'flex-end', color: 'white',
                     alignItems: 'flex-start', '&:hover': {
                         backgroundColor: 'transparent'
                     }
                 }} onClick={handleImg}>
-                    <Box sx={{ height: '13%', display: 'flex', justifyContent: 'flex-end' }}>
-                        <img src="/assets/images/addImage_Icon.png" alt="" />
-                    </Box>
+                    {!imagePath ? (
+                        <Box sx={{ width: '100%', height: '13%', display: 'flex', justifyContent: 'flex-end' }}>
+                            <img src="/assets/images/addImage_Icon.png" alt="" />
+                        </Box>) : (<Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <img src={imagePath} style={{
+                                maxWidth: '100%',
+                                maxHeight: '100%', objectFit: 'contain'
+                            }} alt="" />
+                        </Box>)}
                 </Button>
                 <input
                     type="file"
@@ -231,7 +268,6 @@ const Profile = () => {
                         />
 
                     </Box>
-
                 </Box>
             </Box>
         </Box>

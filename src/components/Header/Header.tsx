@@ -9,7 +9,7 @@ import Tooltip from '@mui/material/Tooltip';
 import HeaderIcons from './HeaderIcons/HeaderIcons';
 import DayNightSwith from '../../common/DayNightSwith';
 import HeaderContentProps from '../../Models/Interfaces/IHeaderContentProps';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setArchiveValue, setNotficationOpenValue } from '../../ReduxToolkit/Reducers/headerMenu-reducer';
 import { useLocation } from 'react-router-dom';
@@ -19,6 +19,8 @@ import { ValidateProfileData } from '../../common/Validation/validationProfile';
 import { useAlert } from '../../common/Alerts/AlertContext';
 import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import Cookies from 'universal-cookie';
+import CryptoJS from 'crypto-js';
+import { useProfileImage } from '../../common/AccountImage/ProfileImageContext';
 
 enum TokenType {
     ACCESS = 'ACCESS',
@@ -58,7 +60,8 @@ interface RootState {
 
 
 const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClose }) => {
-    
+    const SECRET_KEY = process.env.REACT_APP_SECRET_KEY
+
     let approvedPassword;
     const invisible = false;
 
@@ -76,10 +79,30 @@ const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClo
     const userProfileNewPassword = useSelector((state: RootState) => state.profile.newPassword);
     const userProfileCurrentPassword = useSelector((state: RootState) => state.profile.currentPassword);
 
-
+    const { imagePath, setImagePath } = useProfileImage();
+    
     const isUrlProfile = location.pathname === "/Profile" ? true : false;
+    
 
+    if (!SECRET_KEY) {
+        throw new Error('Secret key is not defined in the environment variables3');
+    }
 
+    useEffect(() => {
+        const encryptedPath = localStorage.getItem("encryptedAvatarImagePath");
+        console.log('encryptedPath ' + encryptedPath)
+
+        if (encryptedPath) {
+            try {
+                const decryptedBytes = CryptoJS.AES.decrypt(encryptedPath, SECRET_KEY);
+                const decryptedPath = decryptedBytes.toString(CryptoJS.enc.Utf8);
+                setImagePath(decryptedPath);
+                console.log('decryptedPath ' + decryptedPath)
+            } catch (error) {
+                console.error("Error decrypting image path:", error);
+            }
+        }
+    }, []);
 
     const toggleArchiveDrawer = (value: boolean) => {
         dispatch(setArchiveValue(value));
@@ -201,7 +224,7 @@ const Header: React.FC<HeaderContentProps> = ({ anchorEl, handleClick, handleClo
                         <Tooltip title="Quick settings" placement="bottom" arrow>
                             <IconButton sx={{ marginTop: '1px', cursor: 'pointer' }} onClick={handleClick} aria-controls="simple-menu"
                                 aria-haspopup="true" >
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                                <Avatar alt="User Avatar" src={imagePath || "/static/images/avatar/1.jpg"} />
                             </IconButton>
                         </Tooltip>
                         <Menu
